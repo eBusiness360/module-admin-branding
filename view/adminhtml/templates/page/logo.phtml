@@ -1,0 +1,39 @@
+<?php
+/**
+ * @author    eBusiness360 – Maxime LESGUILLIER aka Maxcode
+ * @copyright Copyright © 2026 eBusiness360 – Maxime LESGUILLIER aka Maxcode. Tous droits réservés.
+ * @license   Licence propriétaire — voir le fichier LICENSE
+ * @package   Maxcode_AdminBranding
+ *
+ * @var \Magento\Backend\Block\Page\Header $block
+ */
+
+/** @var \Maxcode\AdminBranding\ViewModel\Logo|null $viewModel */
+$viewModel = $block->getData('view_model');
+
+// Ce template rend le logo de TOUTES les pages d'administration. Si un module
+// tiers recree le bloc « logo » sans relayer l'argument view_model, on retombe
+// sur le logo du coeur plutot que de mettre l'administration hors service.
+$logoUrl = $viewModel instanceof \Maxcode\AdminBranding\ViewModel\Logo
+    ? $viewModel->getLogoUrl()
+    : null;
+$logoAlt = $viewModel instanceof \Maxcode\AdminBranding\ViewModel\Logo
+    ? $viewModel->getLogoAlt()
+    : (string) __('Administration');
+
+// Repli du cœur : icône dans l'en-tête, logo complet sur la page de connexion.
+$coreLogo = $block->hasLogoImageSrc() ? $block->getLogoImageSrc() : 'images/magento-logo.svg';
+?>
+<a href="<?= $block->escapeUrl($block->getHomeLink()) ?>" class="logo">
+    <?php if ($logoUrl !== null) : ?>
+        <img class="logo-img"
+             src="<?= $block->escapeUrl($logoUrl) ?>"
+             alt="<?= $block->escapeHtmlAttr($logoAlt) ?>"
+             title="<?= $block->escapeHtmlAttr($logoAlt) ?>"/>
+    <?php else : ?>
+        <img class="logo-img"
+             src="<?= $block->escapeUrl($block->getViewFileUrl($coreLogo)) ?>"
+             alt="<?= $block->escapeHtmlAttr(__('Magento Admin Panel')) ?>"
+             title="<?= $block->escapeHtmlAttr(__('Magento Admin Panel')) ?>"/>
+    <?php endif; ?>
+</a>

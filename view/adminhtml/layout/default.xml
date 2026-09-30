@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="logo">
+            <arguments>
+                <argument name="template" xsi:type="string">Maxcode_AdminBranding::page/logo.phtml</argument>
+                <argument name="view_model" xsi:type="object">Maxcode\AdminBranding\ViewModel\Logo</argument>
+            </arguments>
+        </referenceBlock>
+        <!--
+            La feuille n'est PAS declaree par un <css src> en <head> : elle y
+            serait servie AVANT css/styles.css du theme, qui l'emporterait a
+            specificite egale.
+
+            Elle n'est PAS NON PLUS rendue dans « head.additional », bien que ce
+            soit l'emplacement documente : Magento_PageBuilder REDECLARE un bloc
+            du meme nom dans son handle « editor »
+            (module-page-builder/view/adminhtml/layout/editor.xml:14). Sur toute
+            page appliquant ce handle — categories, fiche produit, pages CMS — le
+            bloc du coeur est remplace et nos enfants disparaissent avec lui.
+            Symptome : le module semble inactif sur ces ecrans alors que le
+            crédit en pied de page, lui, s'affiche.
+
+            « after.body.start » est un CONTENEUR, pas un bloc : il ne peut pas
+            etre remplace de cette facon. Et comme il est rendu juste apres la
+            fermeture du <head>, notre feuille reste bien la derniere servie.
+        -->
+        <referenceContainer name="after.body.start">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="maxcode.adminbranding.stylesheet"
+                   before="-"
+                   template="Maxcode_AdminBranding::page/stylesheet.phtml"/>
+            <block class="Magento\Framework\View\Element\Template"
+                   name="maxcode.adminbranding.favicon"
+                   template="Maxcode_AdminBranding::page/favicon.phtml">
+                <arguments>
+                    <argument name="view_model" xsi:type="object">Maxcode\AdminBranding\ViewModel\Favicon</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+        <referenceContainer name="footer">
+            <referenceContainer name="legal">
+                <referenceContainer name="legal.system">
+                    <block class="Magento\Framework\View\Element\Template"
+                           name="maxcode.adminbranding.credit"
+                           after="version"
+                           template="Maxcode_AdminBranding::page/credit.phtml">
+                        <arguments>
+                            <argument name="view_model" xsi:type="object">Maxcode\AdminBranding\ViewModel\Credit</argument>
+                        </arguments>
+                    </block>
+                </referenceContainer>
+            </referenceContainer>
+        </referenceContainer>
+    </body>
+</page>

@@ -1,0 +1,24 @@
+<?php
+/**
+ * @author    eBusiness360 – Maxime LESGUILLIER aka Maxcode
+ * @copyright Copyright © 2026 eBusiness360 – Maxime LESGUILLIER aka Maxcode. Tous droits réservés.
+ * @license   Licence propriétaire — voir le fichier LICENSE
+ * @package   Maxcode_AdminBranding
+ *
+ * @var \Magento\Framework\View\Element\Template $block
+ */
+
+/** @var \Maxcode\AdminBranding\ViewModel\Favicon|null $viewModel */
+$viewModel = $block->getData('view_model');
+
+// Ce bloc rend dans le <head> de TOUTES les pages d'administration. Si un
+// module tiers recree le bloc sans relayer l'argument view_model, on n'affiche
+// simplement pas de favicon plutot que de mettre l'administration hors service.
+$faviconUrl = $viewModel instanceof \Maxcode\AdminBranding\ViewModel\Favicon
+    ? $viewModel->getFaviconUrl()
+    : null;
+?>
+<?php if ($faviconUrl !== null) : ?>
+<link rel="icon" href="<?= $block->escapeUrl($faviconUrl) ?>"/>
+<link rel="shortcut icon" href="<?= $block->escapeUrl($faviconUrl) ?>"/>
+<?php endif; ?>

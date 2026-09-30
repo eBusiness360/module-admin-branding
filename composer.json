@@ -1,0 +1,19 @@
+{
+    "name": "maxcode/module-admin-branding",
+    "description": "Habillage de l'administration Magento 2 : rendu des boutons, bordures et séparateurs, logo et favicon configurables.",
+    "type": "magento2-module",
+    "license": "proprietary",
+    "require": {
+        "php": ">=8.2",
+        "magento/framework": "^103.0",
+        "magento/module-backend": "*",
+        "magento/module-config": "*",
+        "magento/module-media-storage": "*"
+    },
+    "autoload": {
+        "files": ["registration.php"],
+        "psr-4": {
+            "Maxcode\\AdminBranding\\": ""
+        }
+    }
+}

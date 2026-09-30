@@ -1,0 +1,39 @@
+<?php
+/**
+ * @author    eBusiness360 – Maxime LESGUILLIER aka Maxcode
+ * @copyright Copyright © 2026 eBusiness360 – Maxime LESGUILLIER aka Maxcode. Tous droits réservés.
+ * @license   Licence propriétaire — voir le fichier LICENSE
+ * @package   Maxcode_AdminBranding
+ *
+ * Pourquoi ce template plutot qu'un simple <css src> dans le layout :
+ *
+ * Declaree en <head>, notre feuille etait servie AVANT celle du theme
+ * (css/styles.css), donc le theme l'emportait a specificite egale et le
+ * module ne changeait rien a l'ecran. Mesure sur le rendu reel.
+ *
+ * Pourquoi PAS « head.additional », malgre les apparences :
+ *
+ * Ce bloc conviendrait sur le papier — Magento\Framework\View\Result\Page::render()
+ * l'assigne a la variable headAdditional, que module-theme/view/base/templates/
+ * root.phtml place dans le <head> APRES headAssets, donc apres les feuilles du
+ * theme. Mais Magento_PageBuilder REDECLARE un bloc du meme nom dans son handle
+ * « editor » (module-page-builder/view/adminhtml/layout/editor.xml:14). Sur toute
+ * page appliquant ce handle — categories, fiche produit, pages CMS — le bloc du
+ * coeur est remplace et nos enfants disparaissent avec lui : l'habillage tombe en
+ * silence sur ces ecrans, alors que le credit en pied de page, lui, s'affiche
+ * toujours. C'est ce symptome trompeur qui a coute la premiere recherche.
+ *
+ * Le layout place donc ce template dans « after.body.start », qui est un
+ * CONTENEUR et non un bloc : il ne peut pas etre remplace de cette facon. Et
+ * comme il est rendu juste apres la fermeture du <head>, la feuille reste la
+ * derniere servie — l'ordre est preserve sans dependre d'un nom de bloc que le
+ * coeur ou un module tiers peut reprendre.
+ *
+ * Ne pas « simplifier » en revenant a head.additional : voir
+ * view/adminhtml/layout/default.xml, qui porte la meme mise en garde.
+ *
+ * @var \Magento\Framework\View\Element\Template $block
+ */
+?>
+<link rel="stylesheet" type="text/css"
+      href="<?= $block->escapeUrl($block->getViewFileUrl('Maxcode_AdminBranding::css/admin-theme.css')) ?>"/>

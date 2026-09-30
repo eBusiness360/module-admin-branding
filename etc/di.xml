@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!--
+    Le champ « favicon de l administration » recoit son propre uploader, pour
+    accepter le format ICO que le coeur refuse (voir Model/File/FaviconUploader).
+
+    La substitution passe par un type virtuel de la FABRIQUE, et non par une
+    preference sur l uploader : une preference s appliquerait a TOUS les
+    televersements du site — produits, categories, blocs — alors que seul ce
+    champ doit changer de regle de validation.
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <virtualType name="MaxcodeAdminBrandingFaviconUploaderFactory"
+                 type="Magento\MediaStorage\Model\File\UploaderFactory">
+        <arguments>
+            <argument name="instanceName" xsi:type="string">Maxcode\AdminBranding\Model\File\FaviconUploader</argument>
+        </arguments>
+    </virtualType>
+    <type name="Maxcode\AdminBranding\Model\Config\Backend\Favicon">
+        <arguments>
+            <argument name="uploaderFactory" xsi:type="object">MaxcodeAdminBrandingFaviconUploaderFactory</argument>
+        </arguments>
+    </type>
+</config>

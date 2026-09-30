@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="maxcode" translate="label" sortOrder="400">
+            <label>Maxcode</label>
+        </tab>
+        <section id="maxcode_adminbranding" translate="label" sortOrder="30"
+                 showInDefault="1" showInWebsite="0" showInStore="0">
+            <class>separator-top</class>
+            <label>Admin Theme</label>
+            <tab>maxcode</tab>
+            <resource>Maxcode_AdminBranding::config</resource>
+            <group id="logo" translate="label" sortOrder="10"
+                   showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Logo and favicon</label>
+                <field id="image" translate="label comment" type="image" sortOrder="10"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Admin logo</label>
+                    <comment>Shown on the sign-in page and in the admin header. Leave empty to reuse the storefront logo, or the Magento logo if none is set.</comment>
+                    <!--
+                        Image, et surtout PAS Image\Logo : la sous-classe du coeur ecrase
+                        _getUploadDir() par un « logo » ecrit en dur et ignore le upload_dir
+                        ci-dessous, en y ajoutant un segment de portee. Le fichier partait
+                        dans pub/media/logo/default/ pendant que le ViewModel le cherchait
+                        dans pub/media/maxcode/adminbranding/. Verrouille par un test.
+                    -->
+                    <backend_model>Magento\Config\Model\Config\Backend\Image</backend_model>
+                    <upload_dir config="system/filesystem/media">maxcode/adminbranding</upload_dir>
+                    <base_url type="media">maxcode/adminbranding</base_url>
+                </field>
+                <field id="alt" translate="label comment" type="text" sortOrder="20"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Logo alternative text</label>
+                    <comment>Leave empty to use the default value.</comment>
+                </field>
+                <field id="favicon" translate="label comment" type="image" sortOrder="30"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Admin favicon</label>
+                    <comment>Accepted formats: ICO, PNG, GIF, JPG, APNG.</comment>
+                    <backend_model>Maxcode\AdminBranding\Model\Config\Backend\Favicon</backend_model>
+                    <upload_dir config="system/filesystem/media">maxcode/adminbranding</upload_dir>
+                    <base_url type="media">maxcode/adminbranding</base_url>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

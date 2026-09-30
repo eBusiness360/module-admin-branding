@@ -1,0 +1,1396 @@
+/*
+ * @author    eBusiness360 – Maxime LESGUILLIER aka Maxcode
+ * @copyright Copyright © 2026 eBusiness360 – Maxime LESGUILLIER aka Maxcode. Tous droits réservés.
+ * @license   Licence propriétaire — voir le fichier LICENSE
+ * @package   Maxcode_AdminBranding
+ *
+ * Aucun sélecteur racine global ici. Chaque règle porte son repli dans var(),
+ * pour qu'un module tiers puisse reprendre la main sans conflit d'ordre.
+ */
+
+/*
+ * Plan du fichier
+ *
+ *  1. Fond de page et en-tete
+ *  2. Menu lateral et sous-menus
+ *  3. Liens
+ *  4. Conteneurs, cartes et separateurs
+ *  5. Barre d actions fixe
+ *  6. Surfaces secondaires
+ *  7. Grilles : fonds et alternance des lignes
+ *  8. Boutons ordinaires
+ *  9. Onglets et en-tetes de modale
+ * 10. Grilles : cadre et bandeau d outils
+ * 11. Grilles : en-tetes
+ * 12. Cases a cocher
+ * 13. Grilles : lignes
+ * 14. Boites de dialogue
+ * 15. Pastilles de statut
+ * 16. Messages et alertes
+ * 17. Champs multi-selection
+ * 18. Grilles : coins arrondis
+ * 19. Champs de saisie
+ * 20. Pagination
+ * 21. Champ date
+ * 22. Typographie
+ * 23. Boutons
+ * 24. Page de connexion
+ * 25. Menus deroulants d action
+ *
+ * Les regles ne sont pas rangees par ordre alphabetique mais par ordre de
+ * cascade : deplacer un bloc peut changer le rendu. Chaque section reste
+ * a sa place tant que rien ne prouve le contraire a l ecran.
+ */
+
+
+
+/* == 1. Fond de page et en-tete == */
+/* Fond de page et en-tête */
+
+/*
+ * Pas de prefixe body.adminhtml : Magento pose sur le <body> une classe
+ * adminhtml-<controleur>-<action>, jamais le jeton « adminhtml » seul.
+ * Le selecteur serait mort. .page-wrapper est de toute facon propre au
+ * back-office.
+ */
+.page-wrapper {
+    background: var(--mx-admin-page-bg, #FAF8F4);
+}
+
+/*
+ * Le fond du menu de gauche n'est PAS pose sur .admin__menu mais sur le
+ * pseudo-element .menu-wrapper:before, en position fixe
+ * (Magento_Backend/web/css/source/module/_menu.less:92). Une regle sur
+ * .admin__menu ne change donc rien a l'ecran.
+ */
+.menu-wrapper:before,
+.page-header .admin__header {
+    background-color: var(--mx-admin-header-bg, #0B1426);
+}
+
+
+/* == 2. Menu lateral et sous-menus == */
+/* ---------------------------------------------------------------
+   Panneau de sous-menu
+   --------------------------------------------------------------- */
+
+/*
+ * Les selecteurs ci-dessous reprennent EXACTEMENT ceux du theme, releves
+ * dans le CSS compile. Ecrire plus court perdrait la cascade :
+ *   - le fond du panneau est pose par .admin__menu .level-0>.submenu
+ *   - .submenu-title est un FRERE de .submenu, pas un descendant
+ *   - les intitules de groupe passent par .submenu .parent .submenu-group-title
+ */
+
+/*
+ * Block/Menu.php:373 emet <div class="submenu"> a TOUS les niveaux : les
+ * sous-menus imbriques sont donc des .submenu enfants d un .level-1 ou
+ * plus. Ne viser que .level-0 laissait les panneaux de second niveau au
+ * gris d origine.
+ */
+
+.admin__menu [class*='level-'] > .submenu {
+    background-color: var(--mx-admin-header-bg, #0B1426);
+    box-shadow: none;
+}
+
+/*
+ * Amasty peint son panneau de second niveau avec un selecteur d IDENTIFIANT
+ * (#menu-menuamasty-base-menu .ambase-submenu.-second). Un #id l emporte sur
+ * n importe quelle combinaison de classes, quel que soit l ordre de
+ * chargement : il faut reprendre sa forme exacte.
+ *
+ * Ce fichier compte SIX selecteurs adherant a une extension tierce, repartis
+ * sur deux extensions :
+ *
+ *   Amasty (menu) — trois, tous ci-dessous :
+ *     #menu-menuamasty-base-menu .ambase-submenu.-second
+ *     .ambase-search-block .ambase-search
+ *     .ambase-search-block .ambase-search::placeholder
+ *
+ *   Magento_PageBuilder (zone d edition) — trois, section 4 :
+ *     .pagebuilder-stage-wrapper
+ *     .pagebuilder-canvas
+ *     .admin__field .pagebuilder-stage-wrapper
+ *
+ * Toutes sont ADDITIVES : elles ne font que poser des couleurs, un cadre ou
+ * des marges sur des noeuds que l extension est seule a emettre. Si
+ * l extension est absente, le selecteur ne correspond a rien et la regle est
+ * simplement inerte — aucune d elles ne modifie un noeud du coeur, n annule
+ * une regle du theme ni ne conditionne le reste du fichier.
+ *
+ * Tenir ce decompte a jour en ajoutant une regle a une extension tierce.
+ */
+
+#menu-menuamasty-base-menu .ambase-submenu.-second {
+    background-color: var(--mx-admin-header-bg, #0B1426);
+}
+
+/* Champ de recherche du menu Amasty : meme famille que le panneau. */
+
+.ambase-search-block .ambase-search {
+    background: var(--mx-admin-menu-bg, #0F1E4D);
+    border: var(--mx-admin-border-width, 1px) solid var(--mx-admin-menu-bg, #0F1E4D);
+    border-radius: var(--mx-admin-radius-control, 10px);
+    color: var(--mx-admin-submenu-link, #D7DCE8);
+}
+
+.ambase-search-block .ambase-search::placeholder {
+    color: var(--mx-admin-menu-label, #8891A8);
+}
+
+/* Titre du panneau : « Catalogue ». */
+
+.admin__menu .submenu-title,
+.admin__menu .submenu-sub-title {
+    color: var(--mx-admin-header-text, #FFFFFF);
+}
+
+/* Intitules de groupe : « INVENTAIRE », « DOCUMENTS PRODUIT ». */
+
+.admin__menu .submenu .parent .submenu-group-title {
+    color: var(--mx-admin-menu-label, #8891A8);
+    font-size: 1.2rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+}
+
+/* Entrees : texte clair, pastille arrondie au survol. */
+
+.admin__menu .level-0 > .submenu a {
+    border-radius: var(--mx-admin-radius-control, 10px);
+    color: var(--mx-admin-submenu-link, #D7DCE8);
+    margin-left: 1.5rem;
+    margin-right: 1.5rem;
+}
+
+.admin__menu .level-0 > .submenu a:hover,
+.admin__menu [class*='level-']:not(.level-0) a:hover {
+    background-color: var(--mx-admin-menu-bg, #0F1E4D);
+    color: var(--mx-admin-header-text, #FFFFFF);
+}
+
+/* Entree active : bloc plein arrondi, texte blanc et gras. */
+
+.admin__menu .level-0 > .submenu li._active > a,
+.admin__menu .level-0 > .submenu ._active > a {
+    background-color: var(--mx-admin-menu-bg, #0F1E4D);
+    color: var(--mx-admin-header-text, #FFFFFF);
+    font-weight: 700;
+}
+
+/* Croix de fermeture, discrete. */
+
+.admin__menu .submenu .action-close:before {
+    color: var(--mx-admin-menu-label, #8891A8);
+}
+
+.admin__menu .submenu .action-close:hover:before {
+    color: var(--mx-admin-header-text, #FFFFFF);
+}
+
+.page-header .admin__header,
+.page-header .admin__header a {
+    color: var(--mx-admin-header-text, #FFFFFF);
+}
+
+.admin__menu .level-0 > a {
+    color: var(--mx-admin-header-text, #FFFFFF);
+}
+
+.admin__menu .level-0._active > a,
+.admin__menu .level-0:hover > a {
+    background: var(--mx-admin-menu-bg, #0F1E4D);
+    box-shadow: inset 3px 0 0 var(--mx-admin-menu-active, #F26322);
+}
+
+
+/* == 3. Liens == */
+/* Liens */
+
+.admin__page-section a:not([class]),
+.admin__data-grid-wrap a:not([class]) {
+    color: var(--mx-admin-link, #1E4FA3);
+}
+
+
+/* == 4. Conteneurs, cartes et separateurs == */
+/* Conteneurs et séparateurs */
+
+.admin__page-section,
+.admin__fieldset-wrapper,
+.admin__collapsible-block-wrapper {
+    background: var(--mx-admin-surface, #FFFFFF);
+    border: var(--mx-admin-border-width, 1px) solid var(--mx-admin-border-color, #E5E2DC);
+    border-radius: var(--mx-admin-radius-surface, 12px);
+    box-shadow: var(--mx-admin-shadow, none);
+    margin-bottom: 2rem;
+    padding: 2rem 2.4rem;
+}
+
+.admin__page-section-title,
+.admin__collapsible-title {
+    border-bottom: var(--mx-admin-border-width, 1px) solid var(--mx-admin-border-color-soft, #F0EDE7);
+    margin-bottom: 1.8rem;
+    padding-bottom: 1.2rem;
+}
+
+/*
+ * Le theme pose « padding-left: 0 » sur le titre de section repliable : le
+ * libelle touche le bord de la carte. Mesure sur le rendu : 19px 28px 19px 0.
+ * On ne rajoute que le rembourrage gauche, pour ne pas deplacer la fleche
+ * de repli, calee sur les 28px de droite.
+ */
+
+.admin__collapsible-block-wrapper > .fieldset-wrapper-title > .admin__collapsible-title,
+.fieldset-wrapper > .fieldset-wrapper-title > .admin__collapsible-title,
+.admin__collapsible-title {
+    padding-left: 2.4rem;
+}
+
+/* Le contenu des sections repliables n a aucun rembourrage horizontal. */
+
+.admin__collapsible-block-wrapper > .fieldset-wrapper-content,
+.fieldset-wrapper > .fieldset-wrapper-content {
+    padding-left: 2.4rem;
+    padding-right: 2.4rem;
+}
+
+/*
+ * Zone d edition PageBuilder : elle sort de la grille de champs du
+ * formulaire, s etale d un bord a l autre et n a aucune limite visible.
+ * On lui donne un cadre et une respiration, comme aux autres blocs.
+ */
+
+.pagebuilder-stage-wrapper,
+.pagebuilder-canvas {
+    background: var(--mx-admin-surface, #FFFFFF);
+    border: var(--mx-admin-border-width, 1px) solid var(--mx-admin-border-color, #E5E2DC);
+    border-radius: var(--mx-admin-radius-surface, 12px);
+    margin-bottom: 2rem;
+}
+
+/* Le champ qui porte cette zone est colle aux bords de la carte. */
+
+.admin__field[data-index='description'],
+.admin__field .pagebuilder-stage-wrapper {
+    margin-left: 2.4rem;
+    margin-right: 2.4rem;
+}
+
+/* Colonne de navigation laterale : entrees aerees. */
+
+.admin__page-nav-title,
+.admin__page-nav-link {
+    padding: 1.2rem 1.8rem;
+}
+
+.admin__page-nav {
+    border-radius: var(--mx-admin-radius-surface, 12px);
+    overflow: hidden;
+}
+
+.admin__fieldset > .admin__field + .admin__field {
+    border-top: var(--mx-admin-border-width, 1px) solid var(--mx-admin-border-color-soft, #F0EDE7);
+}
+
+
+/* == 5. Barre d actions fixe == */
+/* Le theme ecrit « .page-main-actions:not(._hidden) » : une regle a une
+   seule classe perd toujours contre elle. On reprend sa forme exacte. */
+
+.page-main-actions,
+.page-main-actions:not(._hidden),
+.page-actions._fixed {
+    background: var(--mx-admin-surface, #FFFFFF);
+    border-top: var(--mx-admin-border-width, 1px) solid var(--mx-admin-border-color, #E5E2DC);
+    border-bottom: var(--mx-admin-border-width, 1px) solid var(--mx-admin-border-color, #E5E2DC);
+}
+
+
+/* == 6. Surfaces secondaires == */
+/* Surfaces secondaires.
+   Le theme admin les rend en gris (#f5f5f5, #f8f8f8, #e3e3e3 selon les
+   ecrans). On les ramene sur la meme famille creme que le fond de page,
+   pour qu'aucune zone ne tranche en gris froid. */
+
+.admin__page-nav,
+.admin__data-grid-header,
+.admin__data-grid-pager-wrap,
+.admin__fieldset-wrapper-title,
+.admin__collapsible-title,
+.modal-header,
+.modal-footer {
+    background: var(--mx-admin-surface-muted, #F4F0E8);
+}
+
+
+/* == 7. Grilles : fonds et alternance des lignes == */
+/* Lignes alternees des grilles : gris d'origine, creme tres clair ici.
+   Le theme utilise @color-white-smoke pour les lignes paires. */
+
+/* Alternance blanc / bleu tres clair.
+   Magento pose la classe _odd-row une ligne sur deux (listing.html:13) :
+   c est une des rares classes fiables des grilles UI. On ne se repose pas
+   sur nth-child, qui se decale des qu une ligne est masquee. */
+
+.data-grid > tbody > tr > td {
+    background-color: var(--mx-admin-surface, #FFFFFF);
+}
+
+.data-grid .data-row._odd-row > td,
+.data-grid > tbody > tr._odd-row > td,
+.data-grid > tbody > tr.even > td {
+    background-color: var(--mx-admin-surface-alt, #F3F6FC);
+}
+
+
+/* == 8. Boutons ordinaires == */
+/* Boutons ordinaires : le theme les rend en gris (@color-gray89).
+   On les ramene sur la famille creme, partout et pas seulement dans la
+   barre d'actions. */
+
+/* « .action-default » nu : c est le point de contact le plus large du
+   module avec les extensions d un client. Voulu, et signale au README. */
+
+/*
+ * Ces regles habillent les boutons SECONDAIRES. Les deux exclusions ne sont
+ * pas des precautions theoriques : chacune repare un defaut constate a
+ * l ecran, sur un bouton qui cumule des classes contradictoires.
+ *
+ * « :not(.action-quaternary) » — les boutons Annuler et Effacer de la galerie
+ * media et du WYSIWYG portent LES DEUX classes. Sans l exclusion ils
+ * recoivent un fond creme et une bordure, alors que le transparent y est
+ * voulu.
+ *
+ * « :not(.primary):not(.action-primary) » — le bouton « Sauvegarder la
+ * configuration » est un <button class="action-default scalable save primary">.
+ * Il est donc secondaire ET primaire aux yeux du CSS, et
+ * « button.action-default:not(.action-quaternary) span » (0,2,2) l emportait
+ * sur « .action-default.primary span » (0,2,1) de la section 23 : le libelle
+ * prenait la couleur du texte courant, posee sur le fond d accentuation.
+ * Mesure avant correctif : span rgb(15,30,77) sur fond rgb(15,30,77).
+ * Le defaut preexistait au passage du texte en marine ; il etait seulement
+ * moins spectaculaire, le libelle valant alors #303030 sur marine, 1,5:1.
+ */
+
+.action-default:not(.action-quaternary):not(.primary):not(.action-primary),
+.modal-footer .action-secondary:not(.action-quaternary):not(.primary):not(.action-primary) {
+    background-color: var(--mx-admin-surface-muted, #F4F0E8);
+    border-color: var(--mx-admin-border-color, #E5E2DC);
+    border-radius: var(--mx-admin-radius-control, 10px);
+    color: var(--mx-admin-text, #0F1E4D);
+}
+
+/* Le libelle doit rester lisible : le theme prevoyait sa couleur pour un
+   fond gris, elle devient trop pale sur creme. */
+
+.action-default:not(.action-quaternary):not(.primary):not(.action-primary) span,
+.admin__data-grid-header .action-default:not(.action-quaternary):not(.primary):not(.action-primary) span,
+button.action-default:not(.action-quaternary):not(.primary):not(.action-primary),
+button.action-default:not(.action-quaternary):not(.primary):not(.action-primary) span {
+    color: var(--mx-admin-text, #0F1E4D);
+}
+
+.action-default:not(.action-quaternary):not(.primary):not(.action-primary):hover,
+.modal-footer .action-secondary:not(.action-quaternary):not(.primary):not(.action-primary):hover {
+    background-color: var(--mx-admin-border-color, #E5E2DC);
+    border-color: var(--mx-admin-border-color, #E5E2DC);
+}
+
+
+/* == 9. Onglets et en-tetes de modale == */
+/* Onglets, en-tetes de modale et zones « vides » du thème. */
+
+.admin__page-nav-title,
+.modal-slide .page-main-actions,
+.admin__fieldset-wrapper-title:hover {
+    background-color: var(--mx-admin-surface-muted, #F4F0E8);
+}
+
+/*
+ * Grilles. La consigne initiale etait « on arrondit le conteneur, jamais
+ * les cellules », par crainte d artefacts avec les en-tetes collants.
+ * DECISION REVUE : on arrondit bien les cellules d angle (voir plus bas),
+ * parce que le rembourrage de .admin__data-grid-wrap empeche le tableau de
+ * toucher les bords du conteneur — l arrondi du conteneur seul ne se voyait
+ * donc pas. Verifie a l ecran : l en-tete collant de Magento est pilote en
+ * JavaScript et non par « position: sticky », il n est pas rogne.
+ */
+
+
+/* == 10. Grilles : cadre et bandeau d outils == */
+/*
+ * Le conteneur exterieur porte le cadre, mais .admin__data-grid-wrap ajoute
+ * un rembourrage : le tableau ne touche pas ses bords, donc l'arrondi du
+ * conteneur seul ne se voit pas. On arrondit le tableau lui-meme.
+ *
+ * border-collapse: separate est necessaire — avec « collapse », les
+ * navigateurs ignorent border-radius sur les cellules.
+ */
+/*
+ * Ce conteneur ne ROGNE PAS son contenu, et c est deliberé.
+ *
+ * Il portait « overflow: hidden », qui ne servait qu a une chose : masquer
+ * les angles carres de la barre d outils, seul enfant a peindre un aplat
+ * jusqu aux coins hauts. Le bas n en avait pas besoin, les cellules de la
+ * derniere ligne portant deja leur propre arrondi (section 18).
+ *
+ * Le prix etait hors de proportion : TOUT panneau flottant depassant du
+ * conteneur etait coupe. Mesure sur la grille des blocs CMS, menu d action
+ * de la derniere ligne : il debordait de 39px et se faisait trancher net,
+ * elementFromPoint en bas du menu renvoyant le pied de page. Le meme defaut
+ * rognait entierement le volet des messages systeme.
+ *
+ * On arrondit donc la barre d outils elle-meme. Son rayon vaut celui du
+ * conteneur MOINS l epaisseur de la bordure : deux rayons identiques
+ * laisseraient un croissant de fond visible entre le cadre et l aplat.
+ */
+
+.admin__data-grid-outer-wrap {
+    background-color: var(--mx-admin-surface, #FFFFFF);
+    border: var(--mx-admin-border-width, 1px) solid var(--mx-admin-border-color, #E5E2DC);
+    border-radius: var(--mx-admin-radius-surface, 12px);
+    overflow: visible;
+}
+
+.admin__data-grid-outer-wrap > .admin__data-grid-header {
+    border-top-left-radius: calc(var(--mx-admin-radius-surface, 12px) - var(--mx-admin-border-width, 1px));
+    border-top-right-radius: calc(var(--mx-admin-radius-surface, 12px) - var(--mx-admin-border-width, 1px));
+}
+
+/*
+ * Le bandeau des messages systeme est, lui aussi, une grille de composants
+ * d interface : il est emballe dans ce meme conteneur et heritait donc du
+ * cadre ci-dessus. Ce n en est pourtant pas une — l habillage du bandeau est
+ * porte par .message-system-inner, section 16 — et un second cadre autour du
+ * premier ne faisait que l epaissir.
+ *
+ * Le conteneur se reconnait a son data-bind : c est le seul point d accroche
+ * stable, la classe etant partagee avec toutes les vraies grilles.
+ */
+
+.admin__data-grid-outer-wrap[data-bind*='notification_area'] {
+    background: none;
+    border: 0;
+    border-radius: 0;
+}
+
+/*
+ * Ni la barre d outils ni le conteneur n ont de rembourrage dans le theme :
+ * leur donner un fond colle le contenu a la bordure. On aere la bande et on
+ * neutralise l espace que .admin__data-grid-wrap reserve au-dessus du
+ * tableau, pour que la barre et l en-tete se touchent proprement.
+ */
+
+/* La bande d outils existe aussi hors du conteneur des grilles UI, sur les
+   anciennes grilles widget : on ne scope pas la regle a ce conteneur,
+   sinon le bloc d actions groupees se colle au bord. */
+
+.admin__data-grid-header,
+.admin__data-grid-outer-wrap .admin__data-grid-header {
+    border-bottom: var(--mx-admin-border-width, 1px) solid var(--mx-admin-border-color, #E5E2DC);
+    margin-bottom: 0;
+    padding: 1.2rem 2rem;
+}
+
+.massaction,
+.admin__data-grid-header .admin__data-grid-actions-wrap {
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+/*
+ * Le conteneur reserve une hauteur minimale pour l indicateur de chargement
+ * (min-height: spinner + 2 indents, _data-grid.less:37). Sur une grille sans
+ * recherche ni filtres, cela laisse une large bande vide. On ramene cette
+ * reserve a la hauteur reelle de l indicateur.
+ */
+.admin__data-grid-outer-wrap {
+    min-height: 0;
+}
+
+.admin__data-grid-outer-wrap .admin__data-grid-wrap {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    padding-top: 0;
+}
+
+.data-grid {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+
+/* == 11. Grilles : en-tetes == */
+/* En-tetes de tableaux : aplat marine, intitules en petites capitales
+   espacees et texte clair. */
+
+/*
+ * « .data-grid th » et non la chaine d enfants directs : certaines
+ * anciennes grilles n ont pas de <thead>, donc « .data-grid > thead > tr >
+ * th » ne les atteint pas et elles retombent sur la regle du theme
+ * (background-color: #514943, border: .1rem solid #8a837f).
+ */
+
+.data-grid thead th,
+.data-grid > thead > tr > th,
+.data-grid > thead > tr > th.data-grid-th,
+.admin__control-table thead th,
+.admin__control-table > thead > tr > th {
+    background-color: var(--mx-admin-header-bg, #0B1426);
+    /* Le theme pose « border: .1rem solid #8a837f » : une simple couleur ne
+       remplace pas la declaration raccourcie. */
+    border: var(--mx-admin-border-width, 1px) solid var(--mx-admin-header-bg, #0B1426);
+    color: var(--mx-admin-header-text, #FFFFFF);
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    padding-bottom: var(--mx-admin-grid-head-pad, 1.4rem);
+    padding-top: var(--mx-admin-grid-head-pad, 1.4rem);
+    text-transform: uppercase;
+}
+
+.data-grid thead th a,
+.data-grid thead th span,
+.data-grid thead th label,
+.data-grid > thead > tr > th a,
+.data-grid > thead > tr > th span,
+.data-grid > thead > tr > th label,
+.admin__control-table thead th a,
+.admin__control-table thead th span,
+.admin__control-table > thead > tr > th a,
+.admin__control-table > thead > tr > th span {
+    color: var(--mx-admin-header-text, #FFFFFF);
+}
+
+/* Les anciennes grilles posent un fond propre sur certaines cellules
+   d en-tete (tri, survol) : on le neutralise pour garder l aplat. */
+
+.data-grid > thead > tr > th:hover,
+.data-grid > thead > tr > th.headings,
+.data-grid > thead > tr > th._sortable:hover,
+.data-grid > thead > tr > th.sorted,
+.data-grid > thead > tr > th.ascend,
+.data-grid > thead > tr > th.descend {
+    background-color: var(--mx-admin-header-bg, #0B1426);
+}
+
+/*
+ * Survol d une colonne triable. Le theme y pose #5f564f, un brun-gris qui
+ * n appartient a rien.
+ *
+ * On reprend --mx-admin-menu-bg plutot que d ajouter un jeton : c est deja
+ * le marine eclairci que le menu lateral emploie au survol d une entree,
+ * pose sur ce meme --mx-admin-header-bg. Meme relation, meme couple de
+ * couleurs — qui repeint l un repeint l autre, ce qui est le comportement
+ * attendu.
+ */
+
+.data-grid .data-grid-th._sortable:focus,
+.data-grid .data-grid-th._sortable:hover {
+    background-color: var(--mx-admin-menu-bg, #0F1E4D);
+}
+
+/* Cellule de selection : le controle doit rester centre dans la cellule,
+   sans deborder de l aplat. */
+
+.data-grid > thead > tr > th {
+    vertical-align: middle;
+}
+
+.data-grid > thead > tr > th select,
+.data-grid > thead > tr > th .admin__control-select {
+    border-radius: 6px;
+    height: 2.4rem;
+    margin: 0;
+    padding: 0 2rem 0 .6rem;
+    vertical-align: middle;
+}
+
+.data-grid > thead > tr > th .admin__control-checkbox + label:before,
+.data-grid > tbody > tr > td .admin__control-checkbox + label:before {
+    margin-top: 0;
+}
+
+/*
+ * Case de selection des anciennes grilles.
+ *
+ * Le theme la positionne en absolu sous sa cellule, avec « margin-top:
+ * 3.3rem » (forms/_temp.less:387), valeur calee sur un rembourrage de
+ * cellule de 1rem (@data-grid-cell__padding-vertical). Ce fichier porte ce
+ * rembourrage a --mx-admin-grid-head-pad, donc la case descend d autant.
+ *
+ * Le calc rattrape exactement cet ecart. Ne pas y remettre une valeur fixe :
+ * une valeur reglee a l oeil sur une grille se decale sur les autres, dont
+ * les en-tetes n ont pas la meme hauteur.
+ */
+
+.mass-select-wrap {
+    margin-top: calc(3.3rem + (var(--mx-admin-grid-head-pad, 1.4rem) - 1rem) * 2);
+}
+
+/*
+ * Exception : le menu deroulant « tout selectionner » est rendu A L INTERIEUR
+ * du th, mais sur fond blanc. Sans cette regle il herite du texte clair
+ * ci-dessus et devient invisible — un rectangle blanc vide.
+ */
+.data-grid > thead > tr > th .action-menu,
+.data-grid > thead > tr > th .action-menu a,
+.data-grid > thead > tr > th .action-menu span,
+.data-grid > thead > tr > th .action-menu-item,
+.data-grid > thead > tr > th .action-menu-item span {
+    color: var(--mx-admin-text, #0F1E4D);
+}
+
+.data-grid > thead > tr > th .action-menu-item:hover {
+    background-color: var(--mx-admin-surface-muted, #F4F0E8);
+}
+
+
+/* == 12. Cases a cocher == */
+/* Cases a cocher : plus grandes, coins arrondis, remplies en bleu quand
+   elles sont cochees. Le theme les dessine par le pseudo-element
+   « + label:before », et revele le signe par la couleur du texte. */
+
+.admin__control-checkbox + label:before {
+    border: var(--mx-admin-border-width-field, 1.5px) solid var(--mx-admin-border-color, #E5E2DC);
+    border-radius: 4px;
+    font-size: 1.4rem;
+    height: 1.6rem;
+    line-height: 1.6rem;
+    width: 1.6rem;
+}
+
+/*
+ * « ._indeterminate » est l etat de selection partielle de la case d en-tete
+ * (grid/columns/multiselect.html:15). Sans lui, cette case restait blanche
+ * quand les autres etaient bleues.
+ */
+
+/*
+ * Le signe est pose SUR --mx-admin-check, pas sur l en-tete : il lui faut sa
+ * propre variable. --mx-admin-on-check n etant definie nulle part, le repli
+ * imbrique retombe sur --mx-admin-header-text et le rendu ne change pas ;
+ * mais qui repeint la case peut desormais corriger le signe sans toucher a
+ * l en-tete.
+ */
+
+.admin__control-checkbox:checked + label:before,
+.admin__control-checkbox._indeterminate + label:before {
+    background-color: var(--mx-admin-check, #1E4FA3);
+    border-color: var(--mx-admin-check, #1E4FA3);
+    color: var(--mx-admin-on-check, var(--mx-admin-header-text, #FFFFFF));
+}
+
+.admin__control-checkbox:hover + label:before,
+.admin__control-checkbox:focus + label:before {
+    border-color: var(--mx-admin-check, #1E4FA3);
+}
+
+/*
+ * Le conteneur du menu « tout selectionner » garde la hauteur d origine de
+ * la case : en l agrandissant, le petit triangle deborde sous l en-tete.
+ * On remet les trois elements a la meme hauteur et on arrondit le cote
+ * droit du declencheur pour qu il prolonge la case.
+ */
+
+.action-multicheck-wrap {
+    height: 1.6rem;
+}
+
+.action-multicheck-wrap .action-multicheck-toggle {
+    background-color: var(--mx-admin-surface, #FFFFFF);
+    border: var(--mx-admin-border-width-field, 1.5px) solid var(--mx-admin-border-color, #E5E2DC);
+    border-left: 0;
+    border-radius: 0 4px 4px 0;
+    height: 1.6rem;
+}
+
+
+/* == 13. Grilles : lignes == */
+/* Lignes : separateur discret, survol a peine marque, respiration. */
+
+.data-grid > tbody > tr > td {
+    border-bottom: var(--mx-admin-border-width, 1px) solid var(--mx-admin-border-color-soft, #F0EDE7);
+    padding-bottom: 1.4rem;
+    padding-top: 1.4rem;
+}
+
+.data-grid > tbody > tr:hover > td {
+    background-color: var(--mx-admin-surface-muted, #F4F0E8);
+}
+
+
+/* == 14. Boites de dialogue == */
+/* Boites de dialogue : coins arrondis, en-tete et pied en creme.
+   Le rayon doit etre pose sur .modal-inner-wrap, qui est la boite visible ;
+   .modal-popup est l overlay plein ecran. */
+
+.modal-popup .modal-inner-wrap,
+.modal-slide .modal-inner-wrap,
+.modal-inner-wrap {
+    border-radius: var(--mx-admin-radius-surface, 12px);
+    overflow: hidden;
+}
+
+.modal-popup .modal-header,
+.modal-popup .modal-footer,
+.modal-slide .modal-header,
+.modal-slide .modal-footer {
+    background-color: var(--mx-admin-surface-muted, #F4F0E8);
+    border-color: var(--mx-admin-border-color, #E5E2DC);
+}
+
+
+/* == 15. Pastilles de statut == */
+/* Pastilles de statut.
+   Certaines grilles emettent les classes grid-severity-* (anciens styles
+   MUI, mui/styles/_table.less:628). Le theme les rend en pave pleine
+   largeur a coins carres ; on les ramene a des pastilles qui epousent le
+   texte. Les grilles UI modernes, elles, n emettent aucune classe par
+   valeur : elles ne sont pas concernees. */
+
+.grid-severity-critical,
+.grid-severity-major,
+.grid-severity-notice,
+.grid-severity-minor {
+    border: 0;
+    border-radius: var(--mx-admin-radius-pill, 999px);
+    display: inline-block;
+    font-size: 1.1rem;
+    letter-spacing: .04em;
+    line-height: 1.8;
+    padding: 0 1.2rem;
+}
+
+.grid-severity-notice {
+    background: var(--mx-admin-success-bg, #EDF7EC);
+    color: var(--mx-admin-success-text, #3F6B12);
+}
+
+.grid-severity-minor {
+    background: var(--mx-admin-warning-bg, #FDF4E7);
+    color: var(--mx-admin-warning-text, #8A3410);
+}
+
+.grid-severity-critical,
+.grid-severity-major {
+    background: var(--mx-admin-error-bg, #FBEDED);
+    color: var(--mx-admin-error-text, #A31A1A);
+}
+
+
+/* == 16. Messages et alertes == */
+/*
+ * Bannieres de message : aplat teinte, cadre doux, lisere epais a gauche.
+ *
+ * Les selecteurs « .message.message-* » couvrent les bandeaux rendus hors
+ * d un conteneur .messages. Ne pas les remettre dans un bloc separe plus
+ * bas : un second bloc ecrasait le cadre doux par une bordure pleine, et le
+ * defaut ne se voyait qu a l ecran.
+ */
+
+.messages .message,
+.message.message-success,
+.message.message-warning,
+.message.message-notice,
+.message.message-error {
+    border-radius: var(--mx-admin-radius-control, 10px);
+    border-style: solid;
+    border-width: 1px 1px 1px 5px;
+    margin-bottom: 1.2rem;
+    /* Seulement le rembourrage vertical : l icone du bandeau est positionnee
+       en absolu par le theme, calee sur SON rembourrage gauche. Ecraser
+       celui-ci fait chevaucher l icone et le texte. */
+    padding-bottom: 1.6rem;
+    padding-top: 1.6rem;
+}
+
+.messages .message > *:first-child::before,
+.messages .message::before {
+    font-size: 1.8rem;
+}
+
+.messages .message-success,
+.message.message-success {
+    background-color: var(--mx-admin-success-bg, #EDF7EC);
+    border-color: var(--mx-admin-success-border, #CFE6C2);
+    border-left-color: var(--mx-admin-success, #79A22E);
+    color: var(--mx-admin-text, #0F1E4D);
+}
+
+.messages .message-warning,
+.messages .message-notice,
+.message.message-warning,
+.message.message-notice {
+    background-color: var(--mx-admin-warning-bg, #FDF4E7);
+    border-color: var(--mx-admin-warning-border, #F0DCC0);
+    border-left-color: var(--mx-admin-warning, #F26322);
+    color: var(--mx-admin-text, #0F1E4D);
+}
+
+.messages .message-error,
+.message.message-error {
+    background-color: var(--mx-admin-error-bg, #FBEDED);
+    border-color: var(--mx-admin-error-border, #EFC9C9);
+    border-left-color: var(--mx-admin-error, #E22626);
+    color: var(--mx-admin-text, #0F1E4D);
+}
+
+/* Liens d action dans les bandeaux : bleu de la charte, en gras. */
+
+.messages .message a {
+    color: var(--mx-admin-link, #1E4FA3);
+    font-weight: 700;
+}
+
+/* Bandeau des messages systeme : meme traitement que les autres alertes.
+   Le theme le rend en jaune vif pleine largeur (Magento_AdminNotification,
+   @message-system__background-color: @color-lazy-sun). */
+
+.message-system .message-system-inner,
+.message-system-short-wrapper,
+.message-system-list .message {
+    background-color: var(--mx-admin-warning-bg, #FDF4E7);
+    border-color: var(--mx-admin-warning-border, #F0DCC0);
+    color: var(--mx-admin-text, #0F1E4D);
+}
+
+/*
+ * Le bandeau systeme est colle a ce qui le suit. Quand un message de page
+ * s affiche en dessous — le cas courant, une extension non enregistree au
+ * dessus d un avis Magento — les deux boites portent le meme fond et se
+ * touchent : elles se lisent comme un seul bloc et on ne voit plus celle de
+ * derriere. Mesure du delta avant correctif :
+ *
+ *                    bandeau systeme      message de page
+ *   bordure haut     0px                  1px  #F0DCC0
+ *   bordure gauche   1px  #F0DCC0         5px  #F26322
+ *   rayon            0                    10px
+ *   marge basse      0                    12px
+ *
+ * On aligne les quatre. La marge basse est ce qui separe reellement les deux
+ * boites ; le reste les fait appartenir a la meme famille.
+ *
+ * « .message-system-collapsible » est en position absolue : lui donner une
+ * marge basse ne deplace pas son ancrage, la liste depliee reste callee sous
+ * le bandeau.
+ */
+
+.message-system .message-system-inner {
+    border-radius: var(--mx-admin-radius-control, 10px);
+    border-style: solid;
+    border-width: var(--mx-admin-border-width, 1px);
+    margin-bottom: 1.2rem;
+}
+
+.message-system .message-system-inner,
+.message-system-list .message {
+    border-left: 5px solid var(--mx-admin-warning, #F26322);
+    border-radius: var(--mx-admin-radius-control, 10px);
+}
+
+/*
+ * Le volet qui se deroule sous « System Messages : N » etait reste au jaune
+ * vif du theme (#FFFBBB, @color-lazy-sun) : mesure a l ecran, c etait le
+ * dernier endroit de l administration a porter cette couleur. Le bandeau
+ * au-dessus etait repeint depuis longtemps, mais pas le volet — l ecart ne
+ * se voyait qu une fois le volet ouvert.
+ *
+ * Il est en position absolue avec z-index 498 : il se superpose a la page,
+ * il lui faut donc un fond opaque et un cadre a lui.
+ */
+
+.message-system-collapsible {
+    background-color: var(--mx-admin-warning-bg, #FDF4E7);
+    border: var(--mx-admin-border-width, 1px) solid var(--mx-admin-warning-border, #F0DCC0);
+    border-left: 5px solid var(--mx-admin-warning, #F26322);
+    border-radius: var(--mx-admin-radius-control, 10px);
+    color: var(--mx-admin-text, #0F1E4D);
+}
+
+
+/* == 17. Champs multi-selection == */
+/* Options selectionnees d un champ multi-selection.
+   Les navigateurs imposent leur propre surlignage gris et ignorent
+   background-color sur option:checked ; l ombre interne est le seul
+   moyen fiable de le remplacer. */
+
+.admin__control-multiselect option:checked,
+.admin__field select[multiple] option:checked {
+    box-shadow: inset 0 0 0 100px var(--mx-admin-surface-alt, #F3F6FC);
+    color: var(--mx-admin-text, #0F1E4D);
+}
+
+
+/* == 18. Grilles : coins arrondis == */
+.data-grid > thead > tr > th:first-child {
+    border-top-left-radius: var(--mx-admin-radius-control, 10px);
+}
+
+.data-grid > thead > tr > th:last-child {
+    border-top-right-radius: var(--mx-admin-radius-control, 10px);
+}
+
+.data-grid > tbody > tr:last-child > td:first-child {
+    border-bottom-left-radius: var(--mx-admin-radius-control, 10px);
+}
+
+.data-grid > tbody > tr:last-child > td:last-child {
+    border-bottom-right-radius: var(--mx-admin-radius-control, 10px);
+}
+
+/*
+ * Uniquement les cellules de corps : inclure « th » ici posait une bordure
+ * creme claire sur l aplat marine des en-tetes, parce que cette regle est
+ * plus specifique que celle qui les colore.
+ */
+
+.data-grid > tbody > tr > td {
+    border-color: var(--mx-admin-border-color-soft, #F0EDE7);
+}
+
+
+/* == 19. Champs de saisie == */
+/* Champs de saisie : plus marqués que les cartes. */
+
+/* Les pages de configuration n emploient pas toutes les memes classes que
+   les formulaires produit : le champ multi-selection et les selects
+   « anciens » ont leurs propres classes. On les couvre toutes. */
+
+.admin__control-text,
+.admin__control-select,
+.admin__control-textarea,
+.admin__control-multiselect,
+.admin__control-file,
+select.admin__control-select,
+.admin__field input[type='text'],
+.admin__field input[type='number'],
+.admin__field input[type='email'],
+.admin__field input[type='password'],
+.admin__field select,
+.admin__field textarea {
+    border: var(--mx-admin-border-width-field, 1.5px) solid var(--mx-admin-border-color, #E5E2DC);
+    border-radius: var(--mx-admin-radius-control, 10px);
+    box-shadow: none;
+}
+
+/*
+ * Anciens ecrans : leurs champs sont gouvernes par styles-old.css, qui les
+ * vise par element sous « .admin__scope-old » et non par classe. Aucune de
+ * nos regles a base de .admin__control-* ne les atteint.
+ */
+
+.admin__scope-old input[type='text'],
+.admin__scope-old input[type='password'],
+.admin__scope-old input[type='number'],
+.admin__scope-old input[type='email'],
+.admin__scope-old input[type='date'],
+.admin__scope-old input[type='datetime'],
+.admin__scope-old input[type='search'],
+.admin__scope-old input[type='tel'],
+.admin__scope-old input[type='url'],
+.admin__scope-old input.search,
+.admin__scope-old textarea,
+.admin__scope-old select {
+    border: var(--mx-admin-border-width-field, 1.5px) solid var(--mx-admin-border-color, #E5E2DC);
+    border-radius: var(--mx-admin-radius-control, 10px);
+}
+
+/* Champs desactives (valeur heritee de la configuration systeme) : le theme
+   leur pose un style propre, plus specifique, qui ecrase les arrondis. */
+
+.admin__control-text[disabled],
+.admin__control-select[disabled],
+.admin__control-textarea[disabled],
+.admin__control-multiselect[disabled],
+.admin__field select[disabled],
+.admin__field input[disabled],
+.admin__field textarea[disabled],
+.admin__control-text._disabled,
+.admin__control-select._disabled,
+.admin__field-control ._disabled {
+    background-color: var(--mx-admin-surface-muted, #F4F0E8);
+    border-color: var(--mx-admin-border-color, #E5E2DC);
+    border-radius: var(--mx-admin-radius-control, 10px);
+}
+
+
+/* == 20. Pagination == */
+/* Pagination : les anciennes grilles emploient encore d autres classes que
+   les formulaires. On arrondit toute la zone plutot que de les enumerer. */
+
+.admin__data-grid-pager-wrap select,
+.admin__data-grid-pager-wrap input,
+.admin__data-grid-pager-wrap button,
+.admin__data-grid-pager .action-previous,
+.admin__data-grid-pager .action-next,
+.admin__control-pages,
+.admin__control-pages-label,
+.pager select,
+.pager input,
+.pager button {
+    border-radius: var(--mx-admin-radius-control, 10px);
+}
+
+/*
+ * « .selectmenu » est le composant qui remplace les listes deroulantes dans
+ * la pagination et les barres d outils. Le theme lui pose « border-radius:
+ * 1px » ; aucune de nos regles a base de .admin__control-* ne l atteint.
+ */
+
+.selectmenu,
+.selectmenu .action-select,
+.selectmenu .selectmenu-toggle,
+.selectmenu .selectmenu-value,
+.selectmenu .selectmenu-value input {
+    border-radius: var(--mx-admin-radius-control, 10px);
+}
+
+/*
+ * Comme « .action-select » (section 25), ce composant est dessine en deux
+ * morceaux : le declencheur, et un pseudo-element « :before » qui forme la
+ * bande de la fleche, calee a droite sur 3.2rem (fond #e3e3e3, filet
+ * #adadad a gauche). Arrondir le declencheur sans elle laissait ses deux
+ * angles de droite carres depasser — c est la bande qu on voit, pas le
+ * declencheur, qui est transparent et large de zero.
+ */
+
+.selectmenu-toggle:before {
+    border-radius: 0 var(--mx-admin-radius-control, 10px) var(--mx-admin-radius-control, 10px) 0;
+}
+
+/*
+ * Boite « Action » des anciennes grilles : le theme la dessine par le label
+ * qui suit le select, et la forcait a « border-radius: 0 » dans une regle
+ * groupant plus de cent selecteurs.
+ */
+
+.mass-select-wrap select + label {
+    border-radius: var(--mx-admin-radius-control, 10px);
+}
+
+
+/* == 21. Champ date == */
+/* Champ date : le bouton calendrier prolonge le champ. */
+
+.admin__control-text._has-datepicker + .ui-datepicker-trigger,
+.admin__field .ui-datepicker-trigger {
+    border-radius: var(--mx-admin-radius-control, 10px);
+}
+
+/*
+ * On ne touche PAS au box-shadow ici. Le theme s en sert pour l anneau de
+ * focus clavier (_reset.less:33 : « ._keyfocus *:focus »), a specificite
+ * egale a la notre : un « box-shadow: none » le supprimerait, et seulement
+ * sur trois des douze types de champ stylés plus haut — deux indicateurs
+ * de focus differents dans le meme formulaire. On se contente de marquer
+ * la bordure, qui s ajoute a l anneau sans le remplacer.
+ */
+
+.admin__control-text:focus,
+.admin__control-select:focus,
+.admin__control-textarea:focus,
+.admin__control-multiselect:focus,
+.admin__field input:focus,
+.admin__field select:focus,
+.admin__field textarea:focus {
+    border-color: var(--mx-admin-accent, #0F1E4D);
+}
+
+
+/* == 22. Typographie == */
+/* ---------------------------------------------------------------
+   Typographie
+   --------------------------------------------------------------- */
+
+/*
+ * ATTENTION : c est la regle la plus large du fichier. Posee sur <body>,
+ * elle s applique par heritage a TOUT le back-office, y compris aux ecrans
+ * des extensions tierces. Ce n est pas un effet de bord : c est voulu, et
+ * c est documente comme tel dans la table « Typographie » du README.
+ *
+ * La famille est neutre par construction : son repli reprend mot pour mot
+ * la pile du theme admin (variables/_typography.less : 'Open Sans' +
+ * @font-family__sans-serif), donc rien ne change tant qu on ne redefinit
+ * pas la variable. Un repli « inherit » ferait au contraire heriter la
+ * police de <html> et casserait la typographie de l administration.
+ *
+ * La graisse, elle, change bel et bien le rendu : le theme compose en 400,
+ * on passe a 600. Magento n embarque Open Sans qu en 300, 400, 600 et 700 —
+ * toute autre valeur retombe sur la graisse voisine, sans effet visible.
+ */
+/*
+ * Le theme compose le back-office en #41362f, un brun-gris herite de l ancienne
+ * charte Magento. On lui substitue le marine : meme lisibilite (13,9:1 sur
+ * blanc, tres au-dela du seuil AA) et la couleur du texte cesse d etre la seule
+ * chose a ne pas appartenir a la palette.
+ *
+ * C est le levier le plus large du fichier : il descend par heritage sur tout
+ * ce qui ne fixe pas sa propre couleur, y compris les ecrans des extensions
+ * tierces.
+ */
+body {
+    color: var(--mx-admin-text, #0F1E4D);
+    font-family: var(--mx-admin-font, 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif);
+    font-weight: var(--mx-admin-font-weight, 600);
+}
+
+/*
+ * Ailleurs dans l administration, .admin__legend est deja compose en 600 par
+ * le theme : rien a corriger. Le seul texte fin de tout le back-office est le
+ * titre de la page de connexion — il est traite dans la section 24, avec le
+ * reste de cet ecran.
+ */
+
+/*
+ * Magento n embarque Open Sans qu en 300, 400, 600 et 700 : il n y a PAS
+ * de 500. Demander 500 fait retomber le navigateur sur 400, donc sans
+ * aucun effet visible. Toute valeur choisie ici doit exister parmi ces
+ * quatre graisses.
+ *
+ * Le theme compose en 400 avec un gris clair : le texte parait maigre.
+ */
+
+.admin__page-section,
+.admin__field-label,
+.data-grid > tbody > tr > td,
+.admin__control-text,
+.admin__control-select,
+.admin__control-textarea {
+    color: var(--mx-admin-text, #0F1E4D);
+}
+
+.admin__field-label,
+.admin__page-section-title,
+.admin__collapsible-title {
+    font-weight: var(--mx-admin-font-weight-strong, 700);
+}
+
+
+/* == 23. Boutons == */
+/* ---------------------------------------------------------------
+   Boutons
+   --------------------------------------------------------------- */
+
+/* Secondaire : le correctif. Le coeur rend ces boutons transparents
+   via abs-action-quaternary (_actions-bar.less:78, module main). */
+
+.page-main-actions .page-actions > button:not(.primary),
+.page-main-actions .page-actions .page-actions-buttons > button:not(.primary) {
+    background: var(--mx-admin-surface, #FFFFFF);
+    border: var(--mx-admin-border-width, 1px) solid var(--mx-admin-border-color, #E5E2DC);
+    border-radius: var(--mx-admin-radius-control, 10px);
+    color: inherit;
+    padding: 6px 12px;
+}
+
+.page-main-actions .page-actions > button:not(.primary):hover,
+.page-main-actions .page-actions .page-actions-buttons > button:not(.primary):hover {
+    background: var(--mx-admin-border-color-soft, #F0EDE7);
+    border-color: var(--mx-admin-border-color, #E5E2DC);
+}
+
+/*
+ * Le libelle suit son bouton, au lieu de deviner sa couleur.
+ *
+ * Constate sur la fiche client : « Creer une commande » est un
+ * <button class="action- scalable add"> SANS la classe primary. La regle des
+ * libelles primaires plus bas l attrape par « button.scalable.add span » et
+ * lui pose du blanc — mais le fond, lui, est blanc, parce que la regle
+ * secondaire ci-dessus (0,3,1) l emporte sur « button.scalable.add » (0,2,1).
+ * Resultat : blanc sur blanc, le bouton disparait.
+ *
+ * Le defaut de fond etait la classe « add » traitee comme une promesse de
+ * bouton primaire. Elle n en est pas une : dans une barre d actions, « add »
+ * designe souvent une action secondaire parmi d autres, et il ne doit y avoir
+ * qu un seul bouton primaire par barre.
+ *
+ * « color: inherit » a 0,3,2 reprend la main sur « button.scalable.add span »
+ * (0,2,2) et rend le libelle solidaire du bouton : quelle que soit la couleur
+ * que le bouton finit par prendre, le texte la suit. Le bouton destructif,
+ * plus bas, repose son rouge a specificite egale mais plus tard.
+ */
+
+.page-main-actions .page-actions > button:not(.primary) span,
+.page-main-actions .page-actions .page-actions-buttons > button:not(.primary) span {
+    color: inherit;
+}
+
+/* Primaire : accent et rayon pilule, reserve aux actions principales. */
+
+/* « button.primary » herite du mixin orange du theme (_actions.less:496).
+   La regle doit donc couvrir cette classe partout, pas seulement dans la
+   barre d actions : les formulaires UI l emploient telle quelle. */
+
+.page-main-actions .page-actions > button.primary,
+.page-main-actions .page-actions .page-actions-buttons > button.primary,
+.admin__page-section .action-primary,
+button.primary,
+button.action-primary,
+button.scalable.add,
+button.scalable.primary,
+.action-default.primary,
+.action-primary,
+.action-add {
+    background: var(--mx-admin-accent, #0F1E4D);
+    /* Les boutons des anciennes grilles portent un degrade : une couleur
+       de fond seule ne le remplace pas. */
+    background-image: none;
+    border-color: var(--mx-admin-accent, #0F1E4D);
+    border-radius: var(--mx-admin-radius-pill, 999px);
+    /*
+     * Le libelle est pose SUR --mx-admin-accent, pas sur l en-tete : il lui faut
+     * sa propre variable. --mx-admin-on-accent n etant definie nulle part, le
+     * repli imbrique retombe sur --mx-admin-header-text et le rendu ne change
+     * pas ; mais un en-tete clair ne noircit plus le texte de TOUS les boutons
+     * primaires de l administration.
+     */
+    color: var(--mx-admin-on-accent, var(--mx-admin-header-text, #FFFFFF));
+    text-shadow: none;
+}
+
+/* Le libelle est souvent dans un <span> imbrique qui porte sa propre
+   couleur : sans cette regle, le texte reste sombre sur le marine. */
+
+button.primary span,
+button.action-primary span,
+button.scalable.add span,
+.action-default.primary span,
+.action-primary span,
+.action-add span {
+    /* Meme fond d accentuation que la regle ci-dessus : meme variable. */
+    color: var(--mx-admin-on-accent, var(--mx-admin-header-text, #FFFFFF));
+    text-shadow: none;
+}
+
+.page-main-actions .page-actions > button.primary:hover,
+.admin__page-section .action-primary:hover,
+button.primary:hover,
+button.action-primary:hover,
+.action-default.primary:hover,
+.action-primary:hover {
+    background: var(--mx-admin-accent-hover, #0B1426);
+    border-color: var(--mx-admin-accent-hover, #0B1426);
+    box-shadow: none;
+}
+
+/* Destructif. Le coeur pose la classe "delete" (pas "action-delete") sur
+   ce bouton dans la barre d'actions : Backend/Block/Widget/Form/Container.php.
+
+   La variante « .page-actions-buttons > button.delete » n est pas une
+   redondance : sur la fiche client, les boutons sont emballes dans
+   « .page-actions-buttons », et le selecteur en enfant direct ne trouvait
+   rien. Mesure avant correctif : « Supprimer le client » rendait son libelle
+   en rgb(15,30,77), le marine du texte courant, jamais en rouge. */
+
+.page-main-actions .page-actions > button.delete,
+.page-main-actions .page-actions .page-actions-buttons > button.delete {
+    border-color: var(--mx-admin-error, #E22626);
+    color: var(--mx-admin-error, #E22626);
+}
+
+/* Le bouton « Supprimer » porte lui aussi son libelle dans un <span>. */
+
+.page-main-actions .page-actions > button.delete span,
+.page-main-actions .page-actions .page-actions-buttons > button.delete span {
+    color: var(--mx-admin-error, #E22626);
+}
+
+/* Repli pour les modules tiers qui posent un <button> sans aucune classe.
+   Scope aux conteneurs d'administration : jamais de regle globale. */
+
+.page-main-actions button:not([class]),
+.admin__page-section button:not([class]) {
+    background: var(--mx-admin-surface, #FFFFFF);
+    border: var(--mx-admin-border-width, 1px) solid var(--mx-admin-border-color, #E5E2DC);
+    border-radius: var(--mx-admin-radius-control, 10px);
+    cursor: pointer;
+    padding: 6px 12px;
+}
+
+/*
+ * Volet deroulant des boutons scindes : « Sauvegarder v », « Actions v ».
+ * Le theme le rend a angles vifs. Les selecteurs repris ci-dessous sont
+ * ceux du theme (.actions-split .dropdown-menu et sa famille) : a
+ * specificite egale, notre feuille etant servie apres, elle l emporte.
+ */
+
+.abs-action-menu,
+.actions-split .dropdown-menu,
+.actions-split .action-menu,
+.actions-split .abs-action-menu .action-submenu,
+.actions-split .action-menu .action-submenu {
+    border-radius: var(--mx-admin-radius-control, 10px);
+    overflow: hidden;
+}
+
+/* Ce qu'on ne touche pas : .action-quaternary hors barre d'actions.
+   Les « Annuler » des modales, de la galerie media (Magento_MediaGalleryUi)
+   et du WYSIWYG (Magento_Cms) sont transparents par conception. */
+
+/* == 24. Page de connexion == */
+
+/*
+ * Attention au piege de nommage : sur cette page, « .page-wrapper » n est PAS
+ * le fond de page mais la CARTE BLANCHE elle-meme. Le gabarit admin-login
+ * reutilise la meme classe pour un role different, et le fond sombre est pose
+ * sur le <body>. Mesure a l ecran avant correctif :
+ *   body          -> rgb(55, 51, 48)
+ *   .page-wrapper -> rgb(255, 255, 255), bordure #E3E3E3, rayon 0
+ *
+ * D ou le scope par « .page-layout-admin-login » sur chaque regle : sans lui,
+ * la premiere repeindrait le back-office entier et la seconde encadrerait
+ * d orange toutes les pages d administration.
+ */
+
+.page-layout-admin-login,
+body.adminhtml-auth-login {
+    background-color: var(--mx-admin-login-bg, #0B1426);
+}
+
+/*
+ * L epaisseur du lisere est ecrite en dur, contrairement au reste du fichier :
+ * ce cadre n existe que sur cet ecran et son trait fait partie du dessin, pas
+ * des reglages de forme. Un lisere de 1px ne se lirait pas comme une intention.
+ */
+
+.page-layout-admin-login .page-wrapper {
+    border: 2px solid var(--mx-admin-login-frame, #F26322);
+    border-radius: var(--mx-admin-radius-surface, 12px);
+}
+
+/*
+ * Le titre « Bienvenue, veuillez vous connecter » etait le seul texte fin de
+ * toute l administration : le theme le compose en 300, dans un orange a lui
+ * (#eb5202) qui n est pas celui de la charte. On reprend son selecteur exact,
+ * « .page-layout-admin-login .admin__legend » — a une seule classe, la regle
+ * perdait sans bruit — pour le caler sur la graisse du reste de l interface et
+ * sur l orange du lisere, qu il cotoie maintenant.
+ */
+
+.page-layout-admin-login .admin__legend {
+    color: var(--mx-admin-login-frame, #F26322);
+    font-weight: var(--mx-admin-font-weight, 600);
+}
+
+
+/* == 25. Menus deroulants d action == */
+
+/*
+ * Le controle « Action » au-dessus des grilles, et le meme dans les cellules.
+ * Le theme le dessine en DEUX morceaux : le bouton, et un pseudo-element
+ * « :before » qui forme la bande de la fleche, calee a droite sur 3.2rem
+ * (fond #e3e3e3, bordure #adadad). Arrondir le seul bouton laisserait les
+ * angles carres de cette bande depasser aux deux coins de droite — d ou le
+ * second bloc, arrondi a droite uniquement pour prolonger le bouton.
+ */
+
+.action-select-wrap .action-select {
+    border-radius: var(--mx-admin-radius-control, 10px);
+}
+
+.action-select-wrap .action-select:before {
+    border-radius: 0 var(--mx-admin-radius-control, 10px) var(--mx-admin-radius-control, 10px) 0;
+}

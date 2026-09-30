@@ -1,0 +1,38 @@
+<?php
+/**
+ * @author    eBusiness360 – Maxime LESGUILLIER aka Maxcode
+ * @copyright Copyright © 2026 eBusiness360 – Maxime LESGUILLIER aka Maxcode. Tous droits réservés.
+ * @license   Licence propriétaire — voir le fichier LICENSE
+ * @package   Maxcode_AdminBranding
+ *
+ * @var \Magento\Framework\View\Element\Template $block
+ */
+
+/** @var \Maxcode\AdminBranding\ViewModel\Credit|null $viewModel */
+$viewModel = $block->getData('view_model');
+
+// Ce bloc rend dans le pied de page de TOUTES les pages authentifiees. Si un
+// module tiers recree le bloc sans relayer l'argument view_model, on n'affiche
+// simplement pas le credit plutot que de mettre l'administration hors service
+// — meme garde que logo.phtml et favicon.phtml.
+$isVisible = $viewModel instanceof \Maxcode\AdminBranding\ViewModel\Credit
+    && $viewModel->isVisible();
+?>
+<?php if ($isVisible) : ?>
+<?php
+// « maxcode-admin-credit » n'est stylee nulle part, et c'est voulu : mesure faite
+// sur le pied de page reel (styles.css du theme + admin-theme.css), ce <p> herite
+// deja de .footer-legal-system l'alignement a droite, la taille, le gris et la
+// hauteur de ligne de .magento-version, et son lien recoit de .page-footer a la
+// meme couleur soulignee que « Privacy Policy » et « Report an Issue ». Seul ecart
+// mesure : 2px de marge basse (.magento-version pose margin-bottom: .5rem).
+// La classe reste comme point d'accroche pour un module tiers ou un client ;
+// ajouter une regle pour 2px invisibles couterait une adherence de plus.
+?>
+<p class="maxcode-admin-credit">
+    <?= $block->escapeHtml(__('Magento Admin Theme by Maxcode')) ?> —
+    <a href="<?= $block->escapeUrl($viewModel->getSiteUrl()) ?>"
+       target="_blank"
+       rel="noopener"><?= $block->escapeHtml($viewModel->getSiteLabel()) ?></a>
+</p>
+<?php endif; ?>
