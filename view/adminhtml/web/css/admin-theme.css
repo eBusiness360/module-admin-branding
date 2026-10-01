@@ -621,13 +621,26 @@ button.action-default:not(.action-quaternary):not(.primary):not(.action-primary)
  * cellule de 1rem (@data-grid-cell__padding-vertical). Ce fichier porte ce
  * rembourrage a --mx-admin-grid-head-pad, donc la case descend d autant.
  *
- * Le calc rattrape exactement cet ecart. Ne pas y remettre une valeur fixe :
- * une valeur reglee a l oeil sur une grille se decale sur les autres, dont
- * les en-tetes n ont pas la meme hauteur.
+ * Le theme la cale aussi sur une barre d outils SANS rembourrage (« margin:
+ * 3.3rem 0 0 1.1rem ») : la case est positionnee depuis la rangee d actions
+ * de la barre, pas depuis le tableau. Or la section 10 donne a cette barre
+ * 1.2rem 2rem de rembourrage et une bordure basse. Sans compensation, la case
+ * glissait de 2rem a droite — elle debordait sur la colonne suivante, dont le
+ * fond lui masquait un coin — et remontait.
+ *
+ * Chaque terme rattrape un ecart nomme, pour un en-tete d une ligne (celui
+ * que le theme vise) :
+ *   - vertical : la cellule grandit de (pad - 1rem) au-dessus de son centre ;
+ *     la barre ajoute 1.2rem sous la rangee et sa bordure basse ;
+ *   - horizontal : on retire les 2rem de rembourrage gauche de la barre.
+ * Mesure dans Chrome (grille Notifications) : ecart au centre de la cellule
+ * inferieur a 1px. Ne pas y remettre une valeur fixe : une valeur reglee a l
+ * oeil sur une grille se decale sur les autres.
  */
 
 .mass-select-wrap {
-    margin-top: calc(3.3rem + (var(--mx-admin-grid-head-pad, 1.4rem) - 1rem) * 2);
+    margin-left: calc(1.1rem - 2rem);
+    margin-top: calc(3.3rem + var(--mx-admin-grid-head-pad, 1.4rem) - 1rem + 1.2rem - var(--mx-admin-border-width, 1px));
 }
 
 /*

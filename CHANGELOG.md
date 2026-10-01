@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.0.3] — 2026-10-01
+
+### Corrigé
+- Anciennes grilles (ex. Système > Notifications) : la case de sélection
+  globale de l'en-tête était décalée de 2rem vers la droite, débordait sur la
+  colonne suivante (qui lui masquait un coin) et remontait. Le thème la
+  positionne depuis la barre d'outils, calée sans rembourrage ; nos 1.2rem 2rem
+  de rembourrage et la bordure basse de cette barre sont désormais compensés.
+
 ## [2.0.2] — 2026-10-01
 
 ### Corrigé
