@@ -17,6 +17,12 @@
   passent en texte de marque, gras, sur une bande neutre (contraste 12,4:1) ;
   l'opacité 0,5 du thème est retirée de ces seuls champs, aucun couple de
   couleurs ne pouvant atteindre 4,5:1 à demi-opacité.
+- Multi-sélections actives : juste après un clic, l'option choisie
+  s'affichait en blanc sur notre bande claire. Chrome peint le texte
+  sélectionné d'une liste ayant le focus avec sa couleur système, sans tenir
+  compte de `color`. `-webkit-text-fill-color` garde le texte de marque dans
+  tous les états. La bande est teintée de la couleur de coche, et le texte est
+  en graisse 600, pour que la sélection se voie (contraste 13:1).
 
 ## [2.0.1] — 2026-09-29
 

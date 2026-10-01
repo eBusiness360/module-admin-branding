@@ -933,12 +933,25 @@ button.action-default:not(.action-quaternary):not(.primary):not(.action-primary)
 /* Options selectionnees d un champ multi-selection.
    Les navigateurs imposent leur propre surlignage gris et ignorent
    background-color sur option:checked ; l ombre interne est le seul
-   moyen fiable de le remplacer. */
+   moyen fiable de le remplacer.
+
+   Liste AYANT LE FOCUS (juste apres un clic) : Chrome y peint le texte
+   selectionne de sa couleur systeme, blanche, sans tenir compte de
+   « color ». Sur notre bande claire, le texte disparaissait.
+   -webkit-text-fill-color, lui, est respecte (verifie dans Chrome sur
+   « Autoriser les pays ») : le texte reste sombre dans tous les etats.
+
+   Bande teintee de la couleur de coche (repli fixe pour les navigateurs
+   sans color-mix) et graisse 600 : la selection se voit sans dependre de
+   la seule couleur. Texte #0F1E4D sur #DDE5F1 : 13:1. */
 
 .admin__control-multiselect option:checked,
 .admin__field select[multiple] option:checked {
-    box-shadow: inset 0 0 0 100px var(--mx-admin-surface-alt, #F3F6FC);
+    box-shadow: inset 0 0 0 100px #DDE5F1;
+    box-shadow: inset 0 0 0 100px color-mix(in srgb, var(--mx-admin-check, #1E4FA3) 15%, #FFFFFF);
     color: var(--mx-admin-text, #0F1E4D);
+    -webkit-text-fill-color: var(--mx-admin-text, #0F1E4D);
+    font-weight: 600;
 }
 
 /*
