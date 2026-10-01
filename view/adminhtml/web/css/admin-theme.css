@@ -734,6 +734,24 @@ button.action-default:not(.action-quaternary):not(.primary):not(.action-primary)
     overflow: hidden;
 }
 
+/*
+ * Un volet lateral (.modal-slide) defile DANS .modal-inner-wrap : le theme y
+ * pose « overflow-y: auto » sous ce meme selecteur. Le « overflow: hidden »
+ * ci-dessus, servi apres lui a specificite egale, l ecrasait : tout volet plus
+ * haut que l ecran devenait impossible a faire defiler (mesure sur la fenetre
+ * « Ajouter / Mettre a jour l adresse » de la fiche client : contenu de
+ * 3112px dans une boite de 797px, overflow-y calcule a hidden).
+ *
+ * On rend au theme son defilement vertical. « auto » rogne lui aussi le
+ * contenu sur l arrondi, qui reste donc net. Les fenetres centrees
+ * (.modal-popup) ne sont pas concernees : c est l overlay qui y defile. Les
+ * volets « _inner-scroll » non plus : le theme les vise avec un selecteur plus
+ * specifique, qui l emporte toujours sur celui-ci.
+ */
+.modal-slide .modal-inner-wrap {
+    overflow-y: auto;
+}
+
 .modal-popup .modal-header,
 .modal-popup .modal-footer,
 .modal-slide .modal-header,
@@ -921,6 +939,47 @@ button.action-default:not(.action-quaternary):not(.primary):not(.action-primary)
 .admin__field select[multiple] option:checked {
     box-shadow: inset 0 0 0 100px var(--mx-admin-surface-alt, #F3F6FC);
     color: var(--mx-admin-text, #0F1E4D);
+}
+
+/*
+ * Multi-selections DESACTIVEES des anciens ecrans (configuration : case
+ * « Utiliser les valeurs systeme » cochee, ex. « Autoriser les pays »).
+ *
+ * styles-old.css du theme y ecrit « .admin__scope-old select[disabled]
+ * option[selected] { color: #fff; background: #aaa } » : texte blanc sur une
+ * bande grise. Ce selecteur est plus specifique que le notre ci-dessus
+ * (0,3,2 contre 0,2,1) : sa couleur blanche gagnait, mais pas son fond,
+ * que notre ombre interne recouvrait de #F3F6FC. Resultat : blanc sur
+ * blanc, illisible. On reprend sa forme exacte, servie apres lui.
+ *
+ * Bande neutre plus soutenue que le fond du champ desactive, texte de
+ * marque et graisse forte : l option reste visiblement selectionnee sans
+ * dependre de la seule couleur. Contraste du texte sur la bande : 12,4:1.
+ */
+.admin__scope-old select[disabled] option[selected] {
+    box-shadow: inset 0 0 0 100px var(--mx-admin-border-color, #E5E2DC);
+    color: var(--mx-admin-text, #0F1E4D);
+    font-weight: var(--mx-admin-font-weight-strong, 700);
+}
+
+/*
+ * Le theme pose aussi « opacity: .5 » sur tout champ desactive
+ * (.admin__scope-old select[disabled] et .admin__control-multiselect[disabled]).
+ * A demi-opacite, AUCUN couple de couleurs n atteint 4,5:1 : le meilleur
+ * plafonne vers 3:1 une fois melange au fond de page. On la retire donc des
+ * seules multi-selections ; l etat desactive reste porte par le fond creme,
+ * le curseur interdit et le gris des options non retenues.
+ *
+ * Le fond creme est repris ici : la regle de la section 19 ne l atteint pas
+ * sur ces ecrans, battue par la forme plus specifique du theme qui pose un
+ * gris #e9e9e9. Sur la creme, le gris des options non retenues tient 4,5:1.
+ *
+ * L attribut [multiple] ajoute a la forme du theme borne la regle a ces
+ * champs : les listes simples desactivees gardent leur rendu.
+ */
+.admin__scope-old select[disabled][multiple] {
+    background-color: var(--mx-admin-surface-muted, #F4F0E8);
+    opacity: 1;
 }
 
 

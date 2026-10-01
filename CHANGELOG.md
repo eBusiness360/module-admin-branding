@@ -1,5 +1,23 @@
 # Changelog
 
+## [2.0.2] — 2026-10-01
+
+### Corrigé
+- Les volets latéraux (`.modal-slide`) ne défilaient plus : impossible
+  d'atteindre le bas de la fenêtre « Ajouter / Mettre à jour l'adresse » de la
+  fiche client, ni de tout volet plus haut que l'écran. Le `overflow: hidden`
+  posé sur `.modal-inner-wrap` pour rogner l'arrondi écrasait, à spécificité
+  égale, le `overflow-y: auto` du thème, qui fait défiler ces volets. Le
+  défilement vertical leur est rendu ; l'arrondi reste rogné.
+- Multi-sélections désactivées de la configuration (case « Utiliser les valeurs
+  système » cochée, ex. « Autoriser les pays ») : les options sélectionnées
+  s'affichaient en blanc sur fond quasi blanc. `styles-old.css` du thème leur
+  donne un texte blanc sur bande grise, et notre surlignage des options
+  sélectionnées recouvrait la bande sans reprendre la couleur du texte. Elles
+  passent en texte de marque, gras, sur une bande neutre (contraste 12,4:1) ;
+  l'opacité 0,5 du thème est retirée de ces seuls champs, aucun couple de
+  couleurs ne pouvant atteindre 4,5:1 à demi-opacité.
+
 ## [2.0.1] — 2026-09-29
 
 ### Corrigé
