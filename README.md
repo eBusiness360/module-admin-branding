@@ -9,6 +9,7 @@
 ![License: free EULA](https://img.shields.io/badge/license-free%20EULA-1E4FA3)
 ![Magento 2.4](https://img.shields.io/badge/Magento-2.4.x-F26322)
 ![PHP 8.2+](https://img.shields.io/badge/PHP-8.2%2B-777BB4)
+![Packagist](https://img.shields.io/packagist/v/maxcode/module-admin-branding?color=0F1E4D)
 
 ![Product grid with Maxcode Admin Branding](docs/images/admin-products.png)
 
@@ -44,7 +45,6 @@ Settings: **Stores > Configuration > Maxcode > Admin Theme**.
 ## Installation
 
 ```bash
-composer config repositories.maxcode-admin-branding vcs https://github.com/eBusiness360/module-admin-branding
 composer require maxcode/module-admin-branding
 bin/magento setup:upgrade
 bin/magento setup:di:compile
