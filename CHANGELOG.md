@@ -1,5 +1,15 @@
 # Changelog
 
+## [Non publié] — 2026-10-05
+
+### Documentation
+- Page de présentation GitHub : `README.md` en anglais et `README.fr.md` en
+  français, avec captures avant / après, installation et comparatif avec
+  Admin Branding PRO. Le contrat des variables CSS est désormais aussi en
+  anglais. Aucun code modifié.
+- Captures dans `docs/images/`, exclues de l'archive Composer
+  (`.gitattributes`).
+
 ## [2.0.3] — 2026-10-01
 
 ### Corrigé

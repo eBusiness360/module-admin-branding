@@ -1,104 +1,220 @@
-# Maxcode_AdminBranding
+<div align="center">
 
-Habillage de l'administration Magento 2 aux couleurs Maxcode.
+**English** · [Français](README.fr.md)
 
-## Contrat des variables CSS
+# Maxcode Admin Branding for Magento 2
 
-Ce module n'écrit **jamais** `:root { --mx-admin-*: … }`. Chaque règle de
-`view/adminhtml/web/css/admin-theme.css` lit sa variable avec une valeur de repli :
+**A clean, modern Magento 2 admin: free, no template overrides, uninstalls without a trace.**
+
+![License: free EULA](https://img.shields.io/badge/license-free%20EULA-1E4FA3)
+![Magento 2.4](https://img.shields.io/badge/Magento-2.4.x-F26322)
+![PHP 8.2+](https://img.shields.io/badge/PHP-8.2%2B-777BB4)
+
+![Product grid with Maxcode Admin Branding](docs/images/admin-products.png)
+
+</div>
+
+## Before / after
+
+The same product grid, in the stock Magento admin and with the module.
+
+| Stock Magento | With Maxcode Admin Branding |
+|---|---|
+| ![Stock Magento](docs/images/before-magento.png) | ![With the module](docs/images/admin-products.png) |
+
+## What it does
+
+- **A complete back-office theme:** header, menu, grids, forms, buttons, messages and slide-out panels, on a calm palette (navy, orange, cream background).
+- **A polished sign-in page:** centred card with an outline, your logo, dark background.
+- **Your logo and favicon** in the admin, set from the configuration (the favicon accepts ICO files, which Magento normally rejects).
+- **No template override, no `preference`, no plugin:** one stylesheet and three small layout blocks. Disable it and you get the stock Magento admin back.
+- **Careful readability,** down to the edge cases: selected options, disabled fields, checkboxes.
+- **Translated** into English and French.
+
+| Sign-in page | Dashboard |
+|---|---|
+| ![Sign-in page](docs/images/admin-login.png) | ![Dashboard](docs/images/admin-dashboard.png) |
+
+| Product form | Logo and favicon |
+|---|---|
+| ![Product form](docs/images/admin-product-form.png) | ![Logo and favicon settings](docs/images/config-logo-favicon.png) |
+
+Settings: **Stores > Configuration > Maxcode > Admin Theme**.
+
+## Installation
+
+```bash
+composer config repositories.maxcode-admin-branding vcs https://github.com/eBusiness360/module-admin-branding
+composer require maxcode/module-admin-branding
+bin/magento setup:upgrade
+bin/magento setup:di:compile
+bin/magento setup:static-content:deploy -f --area adminhtml
+bin/magento cache:flush
+```
+
+Requirements: Magento Open Source or Adobe Commerce 2.4.x, PHP 8.2 or later.
+
+---
+
+## Go further with Admin Branding **PRO**
+
+The free module gives your admin the Maxcode theme. **PRO** makes it **yours**, from the configuration screen, without writing a line of code.
+
+| Feature | Free | PRO |
+|---|:---:|:---:|
+| Maxcode back-office theme | ✓ | ✓ |
+| Styled sign-in page, logo and favicon | ✓ | ✓ |
+| **Your colours**: 13 settings, from the header to error messages | | ✓ |
+| **Shapes**: Maxcode style, stock Magento, or custom radii and borders | | ✓ |
+| **Google Fonts typeface** picked with a live preview | | ✓ |
+| **Maintenance page** in your colours, in each store view's language | | ✓ |
+| Hide the publisher credit in the footer | | ✓ |
+
+### Your colours, your typeface, your shapes
+
+The same back office with a palette, a typeface and shapes set in a few clicks:
+
+| Product grid | Sign-in page |
+|---|---|
+| ![Admin in brand colours](docs/images/pro-products.png) | ![Sign-in page in brand colours](docs/images/pro-login.png) |
+
+| Colours | Shapes | Typeface with preview |
+|---|---|---|
+| ![Colour settings](docs/images/pro-config-colors.png) | ![Shape settings](docs/images/pro-config-shapes.png) | ![Typeface picker](docs/images/pro-config-typography.png) |
+
+### A maintenance page that reassures your customers
+
+During `bin/magento maintenance:enable`, Magento shows a bare page. PRO replaces it with a page in your admin's colours:
+- your logo;
+- a message in the store view's language, editable per view;
+- your contact details;
+- a clean layout on mobile.
+
+The page is generated ahead of time. While in maintenance, nothing depends on Magento.
+
+| Desktop | Mobile |
+|---|---|
+| ![Maintenance page on desktop](docs/images/pro-maintenance-desktop.png) | <img src="docs/images/pro-maintenance-mobile.png" alt="Maintenance page on mobile" width="260"> |
+
+![Maintenance page settings](docs/images/pro-config-maintenance.png)
+
+<div align="center">
+
+### [→ Get Admin Branding PRO](https://www.ebusiness360.fr/contact/)
+
+Installs on top of the free module, with Composer. Contact us for a quote.
+
+</div>
+
+---
+
+## For developers: the CSS variable contract
+
+This module **never** writes `:root { --mx-admin-*: … }`. Every rule in
+`view/adminhtml/web/css/admin-theme.css` reads its variable with a fallback value:
 
 ```css
 background: var(--mx-admin-accent, #0F1E4D);
 ```
 
-Un module tiers — `Maxcode_AdminBrandingPro`, ou tout autre — prend la main en
-définissant ces variables dans le `<head>` de l'administration. Une variable
-définie l'emporte toujours sur un repli, quel que soit l'ordre de chargement.
+A third-party module — `Maxcode_AdminBrandingPro` or any other — takes over by
+defining these variables in the admin `<head>`. A defined variable always wins
+over a fallback, whatever the loading order.
 
-Ces noms constituent une interface publique : ils ne changent pas sans montée
-de version majeure.
+These names are a public interface: they don't change without a major version
+bump.
 
-### Couleurs
+### Colours
 
-| Variable | Repli | Rôle |
+| Variable | Fallback | Role |
 |---|---|---|
-| `--mx-admin-accent` | `#0F1E4D` | fond des boutons primaires |
-| `--mx-admin-accent-hover` | `#0B1426` | survol de l'accent |
-| `--mx-admin-on-accent` | *(voir ci-dessous)* | texte posé sur le fond d'accentuation : libellé des boutons primaires. **Non définie par défaut** : retombe sur `--mx-admin-header-text`, puis sur `#FFFFFF`. |
-| `--mx-admin-header-bg` | `#0B1426` | fond de la barre d'en-tête, du menu latéral et des **en-têtes de grille** |
-| `--mx-admin-header-text` | `#FFFFFF` | texte posé sur `--mx-admin-header-bg` : en-tête, menu, en-têtes de grille. Sert aussi de repli à `--mx-admin-on-accent` et `--mx-admin-on-check`. |
-| `--mx-admin-menu-bg` | `#0F1E4D` | menu latéral |
-| `--mx-admin-menu-active` | `#F26322` | entrée de menu active |
-| `--mx-admin-page-bg` | `#FAF8F4` | fond de page |
-| `--mx-admin-login-bg` | `#0B1426` | fond de la page de connexion, derrière la carte |
-| `--mx-admin-login-frame` | `#F26322` | liseré de la carte de connexion et titre « Bienvenue… » |
-| `--mx-admin-surface-muted` | `#F4F0E8` | surfaces secondaires (navigation de configuration, barres de grille, en-têtes de modale) |
-| `--mx-admin-surface-alt` | `#F3F6FC` | lignes alternées des grilles (bleu très clair) |
-| `--mx-admin-menu-label` | `#8891A8` | intitulés de groupe du sous-menu |
-| `--mx-admin-submenu-link` | `#D7DCE8` | entrées du sous-menu |
-| `--mx-admin-text` | `#0F1E4D` | couleur de texte générale, posée sur `body` et héritée par tout ce qui ne fixe pas la sienne |
-| `--mx-admin-check` | `#1E4FA3` | fond des cases à cocher cochées |
-| `--mx-admin-on-check` | *(voir ci-dessous)* | glyphe posé sur `--mx-admin-check`. **Non définie par défaut** : retombe sur `--mx-admin-header-text`, puis sur `#FFFFFF`. |
-| `--mx-admin-link` | `#1E4FA3` | liens |
-| `--mx-admin-success` | `#79A22E` | succès |
-| `--mx-admin-success-bg` | `#EDF7EC` | fond des messages de succès |
-| `--mx-admin-success-border` | `#CFE6C2` | cadre des messages de succès |
-| `--mx-admin-success-text` | `#3F6B12` | texte des pastilles de succès |
-| `--mx-admin-warning` | `#F26322` | alerte |
-| `--mx-admin-warning-bg` | `#FDF4E7` | fond des messages d'alerte |
-| `--mx-admin-warning-border` | `#F0DCC0` | cadre des messages d'alerte |
-| `--mx-admin-warning-text` | `#8A3410` | texte sur fond d'alerte |
-| `--mx-admin-error` | `#E22626` | erreur |
-| `--mx-admin-error-bg` | `#FBEDED` | fond des messages d'erreur |
-| `--mx-admin-error-border` | `#EFC9C9` | cadre des messages d'erreur |
-| `--mx-admin-error-text` | `#A31A1A` | texte des pastilles d'erreur |
+| `--mx-admin-accent` | `#0F1E4D` | primary button background |
+| `--mx-admin-accent-hover` | `#0B1426` | accent hover |
+| `--mx-admin-on-accent` | *(see below)* | text on the accent background: primary button labels. **Not defined by default**: falls back to `--mx-admin-header-text`, then `#FFFFFF`. |
+| `--mx-admin-header-bg` | `#0B1426` | header bar, side menu panels and **grid headers** background |
+| `--mx-admin-header-text` | `#FFFFFF` | text on `--mx-admin-header-bg`: header, menu, grid headers. Also the fallback of `--mx-admin-on-accent` and `--mx-admin-on-check`. |
+| `--mx-admin-menu-bg` | `#0F1E4D` | side menu |
+| `--mx-admin-menu-active` | `#F26322` | active menu item |
+| `--mx-admin-page-bg` | `#FAF8F4` | page background |
+| `--mx-admin-login-bg` | `#0B1426` | sign-in page background, behind the card |
+| `--mx-admin-login-frame` | `#F26322` | sign-in card outline and "Welcome…" heading |
+| `--mx-admin-surface-muted` | `#F4F0E8` | secondary surfaces (configuration navigation, grid toolbars, modal headers) |
+| `--mx-admin-surface-alt` | `#F3F6FC` | alternate grid rows (very light blue) |
+| `--mx-admin-menu-label` | `#8891A8` | submenu group titles |
+| `--mx-admin-submenu-link` | `#D7DCE8` | submenu entries |
+| `--mx-admin-text` | `#0F1E4D` | general text colour, set on `body` and inherited by everything that doesn't set its own |
+| `--mx-admin-check` | `#1E4FA3` | checked checkbox background |
+| `--mx-admin-on-check` | *(see below)* | glyph on `--mx-admin-check`. **Not defined by default**: falls back to `--mx-admin-header-text`, then `#FFFFFF`. |
+| `--mx-admin-link` | `#1E4FA3` | links |
+| `--mx-admin-success` | `#79A22E` | success |
+| `--mx-admin-success-bg` | `#EDF7EC` | success message background |
+| `--mx-admin-success-border` | `#CFE6C2` | success message border |
+| `--mx-admin-success-text` | `#3F6B12` | success badge text |
+| `--mx-admin-warning` | `#F26322` | warning |
+| `--mx-admin-warning-bg` | `#FDF4E7` | warning message background |
+| `--mx-admin-warning-border` | `#F0DCC0` | warning message border |
+| `--mx-admin-warning-text` | `#8A3410` | text on a warning background |
+| `--mx-admin-error` | `#E22626` | error |
+| `--mx-admin-error-bg` | `#FBEDED` | error message background |
+| `--mx-admin-error-border` | `#EFC9C9` | error message border |
+| `--mx-admin-error-text` | `#A31A1A` | error badge text |
 
-#### Les deux variables « posé sur » : `--mx-admin-on-accent` et `--mx-admin-on-check`
+#### The two "on" variables: `--mx-admin-on-accent` and `--mx-admin-on-check`
 
-Ces deux-là sont les seules du tableau qui n'ont **pas** de repli littéral : elles
-retombent sur une autre variable.
+These are the only two in the table **without** a literal fallback: they fall
+back to another variable.
 
 ```css
 color: var(--mx-admin-on-accent, var(--mx-admin-header-text, #FFFFFF));
 ```
 
-Aucune règle de ce module ne les définit. Tant qu'un module tiers ne les pose pas,
-elles se comportent donc exactement comme `--mx-admin-header-text` — c'est
-volontaire, et c'est ce qui rend leur introduction sans effet sur le rendu.
+No rule in this module defines them. Until a third-party module sets them, they
+behave exactly like `--mx-admin-header-text` — on purpose, which is why adding
+them changed nothing on screen.
 
-Elles existent parce que ces deux textes ne sont **pas** posés sur le fond
-d'en-tête : le libellé d'un bouton primaire est posé sur `--mx-admin-accent`, le
-glyphe d'une case cochée sur `--mx-admin-check`. Qui repeint l'un de ces deux
-fonds peut désormais corriger le texte correspondant sans toucher à l'en-tête, et
-qui éclaircit son en-tête ne noircit plus le libellé de tous les boutons
-primaires de l'administration.
+They exist because these two texts do **not** sit on the header background: a
+primary button label sits on `--mx-admin-accent`, a checked box glyph on
+`--mx-admin-check`. Whoever repaints one of these backgrounds can now fix the
+matching text without touching the header, and lightening the header no longer
+darkens every primary button label in the admin.
 
-### Formes
+### Shapes
 
-| Variable | Repli | Rôle |
+| Variable | Fallback | Role |
 |---|---|---|
-| `--mx-admin-radius-control` | `10px` | boutons, champs, listes |
-| `--mx-admin-radius-surface` | `12px` | conteneurs, cartes |
-| `--mx-admin-radius-pill` | `999px` | boutons d'action principale |
-| `--mx-admin-border-width` | `1px` | bordures de conteneur |
-| `--mx-admin-border-width-field` | `1.5px` | bordures de champ |
-| `--mx-admin-border-color` | `#E5E2DC` | bordures |
-| `--mx-admin-border-color-soft` | `#F0EDE7` | séparateurs |
-| `--mx-admin-surface` | `#FFFFFF` | fond des conteneurs |
-| `--mx-admin-shadow` | `none` | ombres |
-| `--mx-admin-grid-head-pad` | `1.4rem` | rembourrage vertical des en-têtes de grille. La position de la case « tout sélectionner » des anciennes grilles en dépend par calcul : la changer déplace les deux ensemble. |
+| `--mx-admin-radius-control` | `10px` | buttons, fields, lists |
+| `--mx-admin-radius-surface` | `12px` | containers, cards |
+| `--mx-admin-radius-pill` | `999px` | primary action buttons |
+| `--mx-admin-border-width` | `1px` | container borders |
+| `--mx-admin-border-width-field` | `1.5px` | field borders |
+| `--mx-admin-border-color` | `#E5E2DC` | borders |
+| `--mx-admin-border-color-soft` | `#F0EDE7` | separators |
+| `--mx-admin-surface` | `#FFFFFF` | container background |
+| `--mx-admin-shadow` | `none` | shadows |
+| `--mx-admin-grid-head-pad` | `1.4rem` | vertical padding of grid headers. The position of the legacy grids' "select all" box is computed from it: changing it moves both together. |
 
-### Typographie
+### Typography
 
-Ces trois variables sont les leviers les plus globaux du module : elles s'appliquent
-sur `body`, donc par héritage à **tout** le back-office, y compris les écrans des
-extensions tierces.
+These three variables are the module's most global levers: they apply to `body`,
+so by inheritance to **the whole** back office, third-party extension screens
+included.
 
-| Variable | Repli | Rôle |
+| Variable | Fallback | Role |
 |---|---|---|
-| `--mx-admin-font` | `'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif` | famille typographique. Le repli reprend la pile du thème admin : il ne change donc rien tant qu'on ne le redéfinit pas. |
-| `--mx-admin-font-weight` | `600` | graisse du texte courant |
-| `--mx-admin-font-weight-strong` | `700` | graisse des libellés et des titres |
+| `--mx-admin-font` | `'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif` | font family. The fallback is the admin theme's own stack, so nothing changes until you redefine it. |
+| `--mx-admin-font-weight` | `600` | body text weight |
+| `--mx-admin-font-weight-strong` | `700` | label and heading weight |
 
-**Magento n'embarque Open Sans qu'en 300, 400, 600 et 700.** Toute autre valeur fait
-retomber le navigateur sur la graisse voisine, sans effet visible.
+**Magento only ships Open Sans in 300, 400, 600 and 700.** Any other value makes
+the browser fall back to the nearest weight, with no visible effect.
+
+---
+
+## License and publisher
+
+Free module distributed under Maxcode's [end-user license agreement](LICENSE)
+(free, proprietary). Published by
+[eBusiness360](https://www.ebusiness360.fr/) — Maxime Lesguillier aka Maxcode.
+
+*Screenshots come from a live store: logos, product names, prices and contact
+details are deliberately masked.*
