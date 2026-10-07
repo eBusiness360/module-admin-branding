@@ -1,6 +1,10 @@
 # Changelog
 
-## [Non publié] — 2026-10-05
+## [2.0.4] — 2026-10-07
+
+### Modifié
+- `composer.json` : description bilingue anglais / français (affichée telle quelle sur
+  Packagist), « Magento 2 » cité dans les deux langues. Aucun code modifié.
 
 ### Documentation
 - Page de présentation GitHub : `README.md` en anglais et `README.fr.md` en
