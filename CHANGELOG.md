@@ -1,5 +1,33 @@
 # Changelog
 
+## [Non publié]
+
+### Corrigé
+- Le chocolat du thème (`#514943`) n'est pas dans la charte ; deux endroits
+  y échappaient encore :
+  - **Boutons `.action-secondary` hors pied de modale** (ex. « Précédent » de
+    l'écran de réception d'une commande fournisseur) : surface crème, texte de
+    la charte, angles arrondis, comme les autres boutons secondaires. Aussi
+    retirés : l'ombre portée du texte, conçue pour un fond sombre, et la flèche
+    blanche des boutons à menu (`.actions-split .action-toggle`), qui aurait
+    disparu sur crème. Les boutons qui portent aussi `.action-tertiary` (fond
+    transparent voulu) sont exclus.
+  - **Pied de tableau des grilles** (`.data-grid tfoot th`, ex. Sous-total,
+    TVA, Montant global) : le thème peint tous les `<th>` en chocolat, la
+    section « en-têtes » n'atteignait que ceux du `<thead>`. Surface crème,
+    cadre et texte de la charte.
+- Barre « Annuler / Enregistrer » au-dessus d'une grille en édition (module
+  Amasty Product Grid, édition multiple du thème) : le thème donne au panneau
+  `margin-bottom: -2rem`, qui remonte la grille sur la barre ; l'en-tête
+  marine mordait de 1rem sur le bas du bouton « Save Changes ». Le
+  remplissage bas de la barre passe de 1rem à 3.6rem (compensation de 2rem +
+  1.6rem d'air). Mesure : bas du bouton de −10 px à +16 px sous l'en-tête. La
+  barre est masquée hors édition : rien ne bouge le reste du temps.
+
+Admin Branding PRO n'est pas touché : il ne fait que poser des variables, ces
+règles reprennent les siennes (`--mx-admin-surface-muted`, `--mx-admin-text`,
+`--mx-admin-border-color`).
+
 ## [2.0.4] — 2026-10-07
 
 ### Modifié

@@ -374,7 +374,18 @@
  * moins spectaculaire, le libelle valant alors #303030 sur marine, 1,5:1.
  */
 
+/*
+ * « .action-secondary » en dehors des pieds de modale : le theme le peint en
+ * chocolat (#514943, texte blanc, angles droits), une couleur qui n est pas
+ * celle de la charte. C est le bouton « Precedent » de l ecran de reception
+ * d une commande fournisseur, le « Annuler » des ecrans de commande, etc.
+ * Mesure avant correctif, sur « a.action-secondary » : fond rgb(81,73,67),
+ * texte rgb(255,255,255), rayon 0. Les memes exclusions que pour
+ * « .action-default », plus « .action-tertiary » (transparent voulu).
+ */
+
 .action-default:not(.action-quaternary):not(.primary):not(.action-primary),
+.action-secondary:not(.action-quaternary):not(.action-tertiary):not(.primary):not(.action-primary),
 .modal-footer .action-secondary:not(.action-quaternary):not(.primary):not(.action-primary) {
     background-color: var(--mx-admin-surface-muted, #F4F0E8);
     border-color: var(--mx-admin-border-color, #E5E2DC);
@@ -386,6 +397,7 @@
    fond gris, elle devient trop pale sur creme. */
 
 .action-default:not(.action-quaternary):not(.primary):not(.action-primary) span,
+.action-secondary:not(.action-quaternary):not(.action-tertiary):not(.primary):not(.action-primary) span,
 .admin__data-grid-header .action-default:not(.action-quaternary):not(.primary):not(.action-primary) span,
 button.action-default:not(.action-quaternary):not(.primary):not(.action-primary),
 button.action-default:not(.action-quaternary):not(.primary):not(.action-primary) span {
@@ -393,9 +405,25 @@ button.action-default:not(.action-quaternary):not(.primary):not(.action-primary)
 }
 
 .action-default:not(.action-quaternary):not(.primary):not(.action-primary):hover,
+.action-secondary:not(.action-quaternary):not(.action-tertiary):not(.primary):not(.action-primary):hover,
 .modal-footer .action-secondary:not(.action-quaternary):not(.primary):not(.action-primary):hover {
     background-color: var(--mx-admin-border-color, #E5E2DC);
     border-color: var(--mx-admin-border-color, #E5E2DC);
+}
+
+/*
+ * Deux details que le theme ne prevoit que pour un bouton chocolat :
+ * l ombre portee du texte (1px 1px 1px sombre, un flou sur fond creme) et la
+ * fleche blanche des boutons a menu (« .actions-split .action-toggle »), qui
+ * disparaitrait sur creme.
+ */
+
+.action-secondary:not(.action-quaternary):not(.action-tertiary):not(.primary):not(.action-primary) {
+    text-shadow: none;
+}
+
+.actions-split .action-toggle.action-secondary:not(.action-quaternary):not(.action-tertiary):not(.primary):not(.action-primary):after {
+    border-color: var(--mx-admin-text, #0F1E4D) transparent transparent transparent;
 }
 
 
@@ -1478,4 +1506,47 @@ body.adminhtml-auth-login {
 
 .action-select-wrap .action-select:before {
     border-radius: 0 var(--mx-admin-radius-control, 10px) var(--mx-admin-radius-control, 10px) 0;
+}
+
+
+/* == 26. Grilles : pied de tableau (totaux) == */
+
+/*
+ * Le theme peint TOUS les « <th> » d une grille en chocolat
+ * (« .data-grid th { background-color: #514943; color: #fff } ») ; la section
+ * 11 ne repeint que ceux de « <thead> ». Les libelles d un pied de tableau
+ * (Sous-total, TVA, Montant global d une commande fournisseur) restaient donc
+ * chocolat. Ils passent en surface creme, texte de la charte : un pied de
+ * tableau est un recapitulatif, pas un en-tete, il ne doit pas rivaliser avec
+ * le bandeau marine.
+ * Mesure avant correctif : fond rgb(81,73,67) sur les trois « th ».
+ */
+
+.data-grid tfoot th {
+    background-color: var(--mx-admin-surface-muted, #F4F0E8);
+    border: var(--mx-admin-border-width, 1px) solid var(--mx-admin-border-color, #E5E2DC);
+    color: var(--mx-admin-text, #0F1E4D);
+}
+
+
+/* == 27. Grilles : panneau d edition en ligne == */
+
+/*
+ * La barre « Annuler / Enregistrer » qui s affiche au-dessus d une grille en
+ * edition (module Amasty Product Grid, et l edition multiple du theme) est un
+ * « .data-grid-info-panel » dont le theme fixe « margin: 2rem .1rem -2rem » :
+ * la marge basse NEGATIVE remonte la grille de 2rem sur la barre. Avec le
+ * remplissage de 1rem des boutons, l en-tete marine mordait de 1rem sur le
+ * bas du bouton « Save Changes ».
+ * Mesure avant correctif : bas du bouton a +10px sous le haut de l en-tete.
+ *
+ * L ecart visible entre le bas du bouton et le haut de l en-tete vaut le
+ * remplissage bas MOINS 2rem. On le remplace donc par 2rem (compensation de la
+ * marge negative) + 1.6rem d air = 3.6rem, soit 1.6rem entre le bouton et
+ * l en-tete. La regle ne vaut que pour la barre d actions : elle est masquee
+ * (display none) hors edition, un panneau vide ne prend donc aucune place.
+ */
+
+.data-grid-info-panel-actions {
+    padding-bottom: 3.6rem;
 }
