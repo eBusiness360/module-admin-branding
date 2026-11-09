@@ -1,6 +1,6 @@
 # Changelog
 
-## [Non publié]
+## [2.0.5] — 2026-11-09
 
 ### Corrigé
 - Le chocolat du thème (`#514943`) n'est pas dans la charte ; deux endroits
